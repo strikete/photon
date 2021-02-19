@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.strikete</groupId>
+  <artifactId>photon</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>Photon LX Console Plugin Manager</name>
+  <description>A plugin interface for Light Boards</description>
+  <dependencies>
+  	<dependency>
+    	<groupId>com.illposed.osc</groupId>
+    	<artifactId>javaosc-core</artifactId>
+    	<version>0.6</version>
+	</dependency>
+	<dependency>
+    	<groupId>org.apache.logging.log4j</groupId>
+    	<artifactId>log4j-core</artifactId>
+    	<version>2.14.0</version>
+	</dependency>
+	<dependency>
+		<groupId>org.yaml</groupId>
+		<artifactId>snakeyaml</artifactId>
+		<version>1.27</version>
+	</dependency>
+	<dependency>
+		<groupId>com.google.guava</groupId>
+		<artifactId>guava</artifactId>
+		<version>30.0-jre</version>
+	</dependency>
+</dependencies>
+<build>
+	<plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-javadoc-plugin</artifactId>
+			<version>3.2.0</version>
+		</plugin>
+	</plugins>
+</build>
+</project>
