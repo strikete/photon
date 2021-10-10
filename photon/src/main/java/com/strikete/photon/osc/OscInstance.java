@@ -1,6 +1,7 @@
 package com.strikete.photon.osc;
 
 import java.io.InputStream;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -30,7 +31,8 @@ public class OscInstance {
 	public enum OscFormat {
 		ETC_EOS, CHAMSYS, HOG4, OTHER
 	}
-
+	
+	public static boolean processingWait;
 	private OscParser receiver;
 	private OscSender sender;
 	private OscMap map;

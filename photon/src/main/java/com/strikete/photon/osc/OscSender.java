@@ -112,11 +112,16 @@ public class OscSender {
 	
 	public synchronized void sendOscMessage(OSCMessage message) {
 		try {
+			if(OscInstance.processingWait) {
+				Thread.sleep(100);
+			}
 			this.sender.send(message);
 		} catch (IOException e) {
 			Main.log.error("OscSender ERROR: IOException encountered on sendOscMessage.",e);
 		} catch (OSCSerializeException e) {
 			Main.log.error("OscSender ERROR: OSCSerializeException on sendOscMessage.",e);
+		} catch (InterruptedException e) {
+			Main.log.error("OscSender ERROR: InterruptedException on sendOscMessage.",e);
 		}
 		this.messagesSent++; //Count another message sent
 	}

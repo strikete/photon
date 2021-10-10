@@ -1,5 +1,7 @@
 package com.strikete.photon.utils;
 
+import java.util.ArrayList;
+
 import com.google.common.eventbus.Subscribe;
 import com.strikete.photon.Main;
 import com.strikete.photon.events.BeamPaletteCountUpdateEvent;
@@ -43,6 +45,23 @@ public class ObjectUpdater {
 	private long bpSleep;
 	private long cuelistSleep;
 	
+	private ArrayList<Integer> channelIndex = new ArrayList<Integer>();
+	private ArrayList<Integer> groupIndex = new ArrayList<Integer>();
+	private ArrayList<Integer> macroIndex = new ArrayList<Integer>();
+	private ArrayList<Integer> effectIndex = new ArrayList<Integer>();
+	private ArrayList<Integer> subIndex = new ArrayList<Integer>();
+	private ArrayList<Integer> presetIndex = new ArrayList<Integer>();
+	private ArrayList<Integer> ipIndex = new ArrayList<Integer>();
+	private ArrayList<Integer> fpIndex = new ArrayList<Integer>();
+	private ArrayList<Integer> cpIndex = new ArrayList<Integer>();
+	private ArrayList<Integer> bpIndex = new ArrayList<Integer>();
+	
+	
+	/*
+	 * FIND MISSING INDEXS
+	 */
+	
+	
 	/*
 	 * SET SLEEP TIMES
 	 */
@@ -75,6 +94,99 @@ public class ObjectUpdater {
 	}
 	public void setBeamPaletteSleep(long bpSleepIn) {
 		this.bpSleep = bpSleepIn;
+	}
+	
+	/*
+	 * SLEEPYTIME JUNCTION
+	 */
+	
+	public void basicSleep() {
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void doPatchSleep() {
+		try {
+			Thread.sleep(patchSleep);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void doGroupSleep() {
+		try {
+			Thread.sleep(groupSleep);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void doMacroSleep() {
+		try {
+			Thread.sleep(macroSleep);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void doEffectSleep() {
+		try {
+			Thread.sleep(effectSleep);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void doSubSleep() {
+		try {
+			Thread.sleep(subSleep);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void doPresetSleep() {
+		try {
+			Thread.sleep(presetSleep);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void doIntensityPaletteSleep() {
+		try {
+			Thread.sleep(ipSleep);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void doFocusPaletteSleep() {
+		try {
+			Thread.sleep(fpSleep);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void doColorPaletteSleep() {
+		try {
+			Thread.sleep(cpSleep);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void doBeamPaletteSleep() {
+		try {
+			Thread.sleep(bpSleep);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/*
@@ -299,18 +411,6 @@ public class ObjectUpdater {
 	/*
 	 * ADVANCED EVENT UPDATE STARTERS
 	 */
-	public synchronized void doAdvancedSubUpdate() {
-		int channelCount = oscInstance.getOscParser().getChannelCount(); //Get channel count
-		int subCount = oscInstance.getOscParser().getSubCount(); //Get sub count
-		
-		sender.sendOscMessage(oscmap.GO_BLIND); //Put the console into blind mode
-		sender.sendOscMessage(oscmap.KEY_RESET_COMMAND_LINE); //Clear the command line
-		
-		for(int x = 0; x < subCount; x++) {
-			Sub inputSub = oscInstance.getOscParser().getSubFromIndex(x);
-			
-		}
-	}
 	
 	/*
 	 * HIGH LEVEL UPDATE METHODS
@@ -318,15 +418,25 @@ public class ObjectUpdater {
 	
 	public synchronized void doBasicUpdate() {
 		updatePatch();
+		basicSleep();
 		updateGroups();
+		basicSleep();
 		updateMacros();
+		basicSleep();
 		updateEffects();
+		basicSleep();
 		updateSubs();
+		basicSleep();
 		updatePresets();
+		basicSleep();
 		updateIntensityPalettes();
+		basicSleep();
 		updateFocusPalettes();
+		basicSleep();
 		updateColorPalettes();
+		basicSleep();
 		updateBeamPalettes();
+		basicSleep();
 		updateCuelists();
 	}
 	
@@ -344,17 +454,17 @@ public class ObjectUpdater {
 		this.oscmap = oscmapIn;
 		this.oscInstance = oscInstanceIn;
 		
-		this.patchSleep = 1000;
-		this.groupSleep = 10;
-		this.macroSleep = 10;
-		this.effectSleep = 10;
-		this.subSleep = 10;
-		this.presetSleep = 10;
-		this.ipSleep = 10;
-		this.fpSleep = 10;
-		this.cpSleep = 10;
-		this.bpSleep = 10;
-		this.cuelistSleep = 1000;
+		this.patchSleep = 1;
+		this.groupSleep = 1;
+		this.macroSleep = 1;
+		this.effectSleep = 1;
+		this.subSleep = 1;
+		this.presetSleep = 1;
+		this.ipSleep = 1;
+		this.fpSleep = 1;
+		this.cpSleep = 1;
+		this.bpSleep = 1;
+		this.cuelistSleep = 1;
 		
 		eventbus.register(this);
 	}

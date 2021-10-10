@@ -10,14 +10,10 @@ public class BeamPaletteUpdateEvent extends GenericUpdateEvent {
 	 * VARIABLES
 	 */
 	private BeamPalette bp;
-	private int indexNum;
 	
 	/*
 	 * METHODS
 	 */
-	public int getIndexNum() {
-		return this.indexNum;
-	}
 	public BeamPalette getBeamPalette() {
 		return this.bp;
 	}
@@ -25,10 +21,9 @@ public class BeamPaletteUpdateEvent extends GenericUpdateEvent {
 	/*
 	 * CONSTRUCTOR
 	 */
-	public BeamPaletteUpdateEvent(OscInstance oscInstanceIn, BeamPalette bpIn, int indexNumIn) {
+	public BeamPaletteUpdateEvent(OscInstance oscInstanceIn, BeamPalette bpIn) {
 		super(oscInstanceIn);
 		this.bp = bpIn;
-		this.indexNum = indexNumIn;
 		Main.log.debug("EVENT TRIGGERED: BeamPaletteUpdateEvent with Beam Palette " + bpIn.getPaletteNum() + " at " + this.getTime());
 	}
 }

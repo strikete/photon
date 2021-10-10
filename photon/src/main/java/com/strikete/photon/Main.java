@@ -7,12 +7,14 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import com.google.common.eventbus.Subscribe;
+import com.strikete.photon.csv.CsvCueLevelParser;
 import com.strikete.photon.events.ChannelCountUpdateEvent;
 import com.strikete.photon.events.ChannelUpdateEvent;
 import com.strikete.photon.objects.Channel;
 import com.strikete.photon.objects.DmxAddress;
 import com.strikete.photon.osc.OscInstance;
 import com.strikete.photon.osc.OscInstance.OscFormat;
+import com.strikete.photon.wtsahtsi.Wtsahtsi;
 
 public class Main {
 
@@ -20,7 +22,7 @@ public class Main {
 	 * VARIABLES
 	 */
 	
-	public static final String version = "SNAPSHOT 0.0.1";
+	public static final String version = "SNAPSHOT 0.9.0";
 	public static Logger log;
 	
 	/*
@@ -63,29 +65,51 @@ public class Main {
 		//Print welcome message
 		printWelcomeMessage();
 		
-		OscInstance osc = new OscInstance(OscFormat.ETC_EOS,"192.168.10.109",6300,6301);
+		OscInstance osc = new OscInstance(OscFormat.ETC_EOS,"192.168.0.86",6300,6301);
 		Main main = new Main();
 		System.out.println(InetAddress.getLocalHost());
 		
 		osc.init();
-		//osc.getEventHandler().register(main);
-		osc.getObjectUpdater().doBasicUpdate();
+		osc.getEventHandler().register(main);
+		
 		
 		
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		osc.getOscSender().sendOscMessage("/eos/out/active/chan");
-		System.out.println("message sent");
+
 		//osc.getOscSender().sendOscMessage(osc.getOscMap().KEY_BLIND);
 		//osc.getOscSender().selectChannel(1);
-		while(true) {
-			//osc.getOscSender().sendOscMessage(osc.getOscMap().GET_PATCH_COUNT);
+		
+		osc.getObjectUpdater().doBasicUpdate();
+		
+		//while(true) {
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
+			//System.out.println(osc.getOscParser().getChannelSize());
+			//Wtsahtsi whut = new Wtsahtsi("/Users/rusettsten/Desktop/KC-ON YOUR FEET.csv",1,osc,1499);
+			printCueLabels(osc);
+			
+			
+		}
+	//}
+	
+	public static void printCueLabels(OscInstance osc) {
+		int cueSize = osc.getOscParser().getCuelistFromIndex(0).getCueSize();
+		for(int x = 0; x < cueSize; x++) {
+			if(!osc.getOscParser().getCuelistFromIndex(0).getCue(x).getName().isEmpty() && !osc.getOscParser().getCuelistFromIndex(0).getCue(x).getName().contains("copy")) {
+				float cueNumber = osc.getOscParser().getCuelistFromIndex(0).getCue(x).getCueNumber();
+				String cueName = osc.getOscParser().getCuelistFromIndex(0).getCue(x).getName();
+				System.out.println("Q" + cueNumber + ": " + cueName);
+				}
 		}
 	}
 

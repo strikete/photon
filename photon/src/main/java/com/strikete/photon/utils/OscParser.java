@@ -1,6 +1,7 @@
 package com.strikete.photon.utils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.illposed.osc.MessageSelector;
@@ -69,18 +70,19 @@ public class OscParser implements OSCMessageListener {
 	private OscMap oscmap;
 	private String version;
 	
-	//TODO: Research ETC object limits and set array size accordingly
-	private Group[] groups = new Group[65535];
-	private Sub[] subs = new Sub[65535];
-	private Channel[] channels = new Channel[65535];
-	private Cuelist[] cuelists = new Cuelist[65535];
-	private Macro[] macros = new Macro[512];
-	private Effect[] effects = new Effect[65535];
-	private Preset[] presets = new Preset[65535];
-	private IntensityPalette[] intensityPalettes = new IntensityPalette[65535];
-	private FocusPalette[] focusPalettes = new FocusPalette[65535];
-	private ColorPalette[] colorPalettes = new ColorPalette[65535];
-	private BeamPalette[] beamPalettes = new BeamPalette[65535];
+	private OSCMessage message;
+	
+	private ArrayList<Group> groups = new ArrayList<Group>();
+	private ArrayList<Sub> subs = new ArrayList<Sub>();
+	private ArrayList<Channel> channels = new ArrayList<Channel>();
+	private ArrayList<Cuelist> cuelists = new ArrayList<Cuelist>();
+	private ArrayList<Macro> macros = new ArrayList<Macro>();
+	private ArrayList<Effect> effects = new ArrayList<Effect>();
+	private ArrayList<Preset> presets = new ArrayList<Preset>();
+	private ArrayList<IntensityPalette> intensityPalettes = new ArrayList<IntensityPalette>();
+	private ArrayList<FocusPalette> focusPalettes = new ArrayList<FocusPalette>();
+	private ArrayList<ColorPalette> colorPalettes = new ArrayList<ColorPalette>();
+	private ArrayList<BeamPalette> beamPalettes = new ArrayList<BeamPalette>();
 	
 	private int groupCount;
 	private int subCount;
@@ -94,46 +96,45 @@ public class OscParser implements OSCMessageListener {
 	private int colorPaletteCount;
 	private int beamPaletteCount;
 	
-	private Channel[] activeChannels = new Channel[65535];
+	private ArrayList<Channel> activeChannels = new ArrayList<Channel>();
 	
-	private int activeChannelCount;
 	private boolean singleChannelSelected;
 	
 	/*
 	 * METHODS - GETTERS FOR TOP INDEX
 	 */
-	public int getGroupCount() {
-		return this.groupCount;
+	public int getGroupSize() {
+		return groups.size();
 	}
-	public int getSubCount() {
-		return this.subCount;
+	public int getSubSize() {
+		return subs.size();
 	}
-	public int getChannelCount() {
-		return this.channelCount;
+	public int getChannelSize() {
+		return channels.size();
 	}
-	public int getCuelistCount() {
-		return this.cuelistCount;
+	public int getCuelistSize() {
+		return cuelists.size();
 	}
-	public int getMacroCount() {
-		return this.macroCount;
+	public int getMacroSize() {
+		return macros.size();
 	}
-	public int getEffectCount() {
-		return this.effectCount;
+	public int getEffectSize() {
+		return effects.size();
 	}
-	public int getPresetCount() {
-		return this.presetCount;
+	public int getPresetSize() {
+		return presets.size();
 	}
-	public int getIntensityPaletteCount() {
-		return this.intensityPaletteCount;
+	public int getIntensityPaletteSize() {
+		return intensityPalettes.size();
 	}
-	public int getFocusPaletteCount() {
-		return this.focusPaletteCount;
+	public int getFocusPaletteSize() {
+		return focusPalettes.size();
 	}
-	public int getColorPaletteCount() {
-		return this.colorPaletteCount;
+	public int getColorPaletteSize() {
+		return colorPalettes.size();
 	}
-	public int getBeamPaletteCount() {
-		return this.beamPaletteCount;
+	public int getBeamPaletteSize() {
+		return beamPalettes.size();
 	}
 	
 	/*
@@ -152,118 +153,550 @@ public class OscParser implements OSCMessageListener {
 	/*
 	 * RETURN DATA TYPES
 	 */
-	public Group[] getGroups() {
+	public ArrayList<Group> getGroups() {
 		return this.groups;
 	}
-	public Sub[] getSubs() {
+	public ArrayList<Sub> getSubs() {
 		return this.subs;
 	}
-	public Channel[] getChannels() {
+	public ArrayList<Channel> getChannels() {
 		return this.channels;
 	}
-	public Cuelist[] getCuelists() {
+	public ArrayList<Cuelist> getCuelists() {
 		return this.cuelists;
 	}
-	public Macro[] getMacros() {
+	public ArrayList<Macro> getMacros() {
 		return this.macros;
 	}
-	public Effect[] getEffects() {
+	public ArrayList<Effect> getEffects() {
 		return this.effects;
 	}
-	public Preset[] getPresets() {
+	public ArrayList<Preset> getPresets() {
 		return this.presets;
 	}
-	public IntensityPalette[] getIntensityPalettes() {
+	public ArrayList<IntensityPalette> getIntensityPalettes() {
 		return this.intensityPalettes;
 	}
-	public FocusPalette[] getFocusPalettes() {
+	public ArrayList<FocusPalette> getFocusPalettes() {
 		return this.focusPalettes;
 	}
-	public ColorPalette[] getColorPalettes() {
+	public ArrayList<ColorPalette> getColorPalettes() {
 		return this.colorPalettes;
 	}
-	public BeamPalette[] getBeamPalettes() {
+	public ArrayList<BeamPalette> getBeamPalettes() {
 		return this.beamPalettes;
 	}
 	
-	public Group getGroupFromIndex(int indexNum) {
-		return this.groups[indexNum];
+	public Group getGroupFromIndex(int index) {
+		return groups.get(index);
 	}
-	public Sub getSubFromIndex(int indexNum) {
-		return this.subs[indexNum];
+	public Sub getSubFromIndex(int index) {
+		return subs.get(index);
 	}
-	public Channel getChannelFromIndex(int indexNum) {
-		return this.channels[indexNum];
+	public Channel getChannelFromIndex(int index) {
+		return channels.get(index);
 	}
-	public Cuelist getCuelistFromIndex(int indexNum) {
-		return this.cuelists[indexNum];
+	public Cuelist getCuelistFromIndex(int index) {
+		return cuelists.get(index);
 	}
-	public Macro getMacroFromIndex(int indexNum) {
-		return this.macros[indexNum];
+	public Macro getMacroFromIndex(int index) {
+		return macros.get(index);
 	}
-	public Effect getEffectFromIndex(int indexNum) {
-		return this.effects[indexNum];
+	public Effect getEffectFromIndex(int index) {
+		return effects.get(index);
 	}
-	public Preset getPresetFromIndex(int indexNum) {
-		return this.presets[indexNum];
+	public Preset getPresetFromIndex(int index) {
+		return presets.get(index);
 	}
-	public IntensityPalette getIntensityPaletteFromIndex(int indexNum) {
-		return this.intensityPalettes[indexNum];
+	public IntensityPalette getIntensityPaletteFromIndex(int index) {
+		return intensityPalettes.get(index);
 	}
-	public FocusPalette getFocusPaletteFromIndex(int indexNum) {
-		return this.focusPalettes[indexNum];
+	public FocusPalette getFocusPaletteFromIndex(int index) {
+		return focusPalettes.get(index);
 	}
-	public ColorPalette getColorPaletteFromIndex(int indexNum) {
-		return this.colorPalettes[indexNum];
+	public ColorPalette getColorPaletteFromIndex(int index) {
+		return colorPalettes.get(index);
 	}
-	public BeamPalette getBeamPaletteFromIndex(int indexNum) {
-		return this.beamPalettes[indexNum];
+	public BeamPalette getBeamPaletteFromIndex(int index) {
+		return beamPalettes.get(index);
 	}
 	
 	/*
 	 * SET DATA TYPES
 	 */
-	public synchronized void setGroupByIndex(Group groupIn, int indexNum) {
-		this.groups[indexNum] = groupIn;
+	public void addReplaceGroup(final Group groupIn) {
+		boolean matchFlag = false;
+		for(int x = 0; x < groups.size(); x++) {
+			if(groups.get(x).getUID().equals(groupIn.getUID())) {
+				matchFlag = true;
+				groups.set(x, groupIn);
+			}
+		}
+		if(!matchFlag) {
+			groups.add(groupIn);
+		}
+		Thread thread = new Thread(){
+		    public void run(){
+		    	eventBus.post(new GroupUpdateEvent(oscInstance, groupIn));
+		    }
+		  };
+		  thread.start();
 	}
-	public synchronized void setSubByIndex(Sub subIn, int indexNum) {
-		this.subs[indexNum] = subIn;
+	public void addReplaceSub(final Sub subIn) {
+		boolean matchFlag = false;
+		for(int x = 0; x < subs.size(); x++) {
+			if(subs.get(x).getUID().equals(subIn.getUID())) {
+				matchFlag = true;
+				subs.set(x, subIn);
+			}
+		}
+		if(!matchFlag) {
+			subs.add(subIn);
+		}
+		Thread thread = new Thread(){
+		    public void run(){
+		    	eventBus.post(new SubUpdateEvent(oscInstance, subIn));
+		    }
+		  };
+		  thread.start();
 	}
-	public synchronized void setChannelByIndex(Channel channelIn, int indexNum) {
-		this.channels[indexNum] = channelIn;
+	public void addReplaceChannel(final Channel channelIn) {
+		boolean matchFlag = false;
+		for(int x = 0; x < channels.size(); x++) {
+			if(channels.get(x).getUID().equals(channelIn.getUID())) {
+				matchFlag = true;
+				channels.set(x, channelIn);
+			}
+		}
+		if(!matchFlag) {
+			channels.add(channelIn);
+		}
+		Thread thread = new Thread(){
+		    public void run(){
+		    	eventBus.post(new ChannelUpdateEvent(oscInstance, channelIn));
+		    }
+		  };
+		  thread.start();
 	}
-	public synchronized void setCuelistByIndex(Cuelist cuelistIn, int indexNum) {
-		this.cuelists[indexNum] = cuelistIn;
+	public void addReplaceCuelist(final Cuelist cuelistIn) {
+		boolean matchFlag = false;
+		for(int x = 0; x < cuelists.size(); x++) {
+			if(cuelists.get(x).getUID().equals(cuelistIn.getUID())) {
+				matchFlag = true;
+				cuelists.set(x, cuelistIn);
+			}
+		}
+		if(!matchFlag) {
+			cuelists.add(cuelistIn);
+		}
+		Thread thread = new Thread(){
+		    public void run(){
+		    	eventBus.post(new CuelistUpdateEvent(oscInstance, cuelistIn));
+		    }
+		  };
+		  thread.start();
 	}
-	public synchronized void setMacroByIndex(Macro macroIn, int indexNum) {
-		this.macros[indexNum] = macroIn;
+	public void addReplaceMacro(final Macro macroIn) {
+		boolean matchFlag = false;
+		for(int x = 0; x < macros.size(); x++) {
+			if(macros.get(x).getUID().equals(macroIn.getUID())) {
+				matchFlag = true;
+				macros.set(x, macroIn);
+			}
+		}
+		if(!matchFlag) {
+			macros.add(macroIn);
+		}
+		Thread thread = new Thread(){
+		    public void run(){
+		    	eventBus.post(new MacroUpdateEvent(oscInstance, macroIn));
+		    }
+		  };
+		  thread.start();
 	}
-	public synchronized void setEffectByIndex(Effect effectIn, int indexNum) {
-		this.effects[indexNum] = effectIn;
+	public void addReplaceEffect(final Effect effectIn) {
+		boolean matchFlag = false;
+		for(int x = 0; x < effects.size(); x++) {
+			if(effects.get(x).getUID().equals(effectIn.getUID())) {
+				matchFlag = true;
+				effects.set(x, effectIn);
+			}
+		}
+		if(!matchFlag) {
+			effects.add(effectIn);
+		}
+		Thread thread = new Thread(){
+		    public void run(){
+		    	eventBus.post(new EffectUpdateEvent(oscInstance, effectIn));
+		    }
+		  };
+		  thread.start();
 	}
-	public synchronized void setPresetByIndex(Preset presetIn, int indexNum) {
-		this.presets[indexNum] = presetIn;
+	public void addReplacePreset(final Preset presetIn) {
+		boolean matchFlag = false;
+		for(int x = 0; x < presets.size(); x++) {
+			if(presets.get(x).getUID().equals(presetIn.getUID())) {
+				matchFlag = true;
+				presets.set(x, presetIn);
+			}
+		}
+		if(!matchFlag) {
+			presets.add(presetIn);
+		}
+		Thread thread = new Thread(){
+		    public void run(){
+		    	eventBus.post(new PresetUpdateEvent(oscInstance, presetIn));
+		    }
+		  };
+		  thread.start();
 	}
-	public synchronized void setIntensityPaletteByIndex(IntensityPalette ipIn, int indexNum) {
-		this.intensityPalettes[indexNum] = ipIn;
+	public void addReplaceIntensityPalette(final IntensityPalette intensityPaletteIn) {
+		boolean matchFlag = false;
+		for(int x = 0; x < intensityPalettes.size(); x++) {
+			if(intensityPalettes.get(x).getUID().equals(intensityPaletteIn.getUID())) {
+				matchFlag = true;
+				intensityPalettes.set(x, intensityPaletteIn);
+			}
+		}
+		if(!matchFlag) {
+			intensityPalettes.add(intensityPaletteIn);
+		}
+		Thread thread = new Thread(){
+		    public void run(){
+		    	eventBus.post(new IntensityPaletteUpdateEvent(oscInstance, intensityPaletteIn));
+		    }
+		  };
+		  thread.start();
 	}
-	public synchronized void setFocusPaletteByIndex(FocusPalette fpIn, int indexNum) {
-		this.focusPalettes[indexNum] = fpIn;
+	public void addReplaceFocusPalette(final FocusPalette focusPaletteIn) {
+		boolean matchFlag = false;
+		for(int x = 0; x < focusPalettes.size(); x++) {
+			if(focusPalettes.get(x).getUID().equals(focusPaletteIn.getUID())) {
+				matchFlag = true;
+				focusPalettes.set(x, focusPaletteIn);
+			}
+		}
+		if(!matchFlag) {
+			focusPalettes.add(focusPaletteIn);
+		}
+		Thread thread = new Thread(){
+		    public void run(){
+		    	eventBus.post(new FocusPaletteUpdateEvent(oscInstance, focusPaletteIn));
+		    }
+		  };
+		  thread.start();
 	}
-	public synchronized void setColorPaletteByIndex(ColorPalette cpIn, int indexNum) {
-		this.colorPalettes[indexNum] = cpIn;
+	public void addReplaceColorPalette(final ColorPalette colorPaletteIn) {
+		boolean matchFlag = false;
+		for(int x = 0; x < colorPalettes.size(); x++) {
+			if(colorPalettes.get(x).getUID().equals(colorPaletteIn.getUID())) {
+				matchFlag = true;
+				colorPalettes.add(colorPaletteIn);
+			}
+		}
+		if(!matchFlag) {
+			colorPalettes.add(colorPaletteIn);
+		}
+		Thread thread = new Thread(){
+		    public void run(){
+		    	eventBus.post(new ColorPaletteUpdateEvent(oscInstance, colorPaletteIn));
+		    }
+		  };
+		  thread.start();
 	}
-	public synchronized void setBeamPaletteByIndex(BeamPalette bpIn, int indexNum) {
-		this.beamPalettes[indexNum] = bpIn;
+	public void addReplaceBeamPalette(final BeamPalette beamPaletteIn) {
+		boolean matchFlag = false;
+		for(int x = 0; x < beamPalettes.size(); x++) {
+			if(beamPalettes.get(x).getUID().equals(beamPaletteIn.getUID())) {
+				matchFlag = true;
+				beamPalettes.add(beamPaletteIn);
+			}
+		}
+		if(!matchFlag) {
+			beamPalettes.add(beamPaletteIn);
+		}
+		Thread thread = new Thread(){
+		    public void run(){
+		    	eventBus.post(new BeamPaletteUpdateEvent(oscInstance, beamPaletteIn));
+		    }
+		  };
+		  thread.start();
+	}
+	
+	/*
+	 * METHODS - MATCH UID then INDEX RETURN
+	 */
+	public int groupUidIndexReturn(String UID) {
+		for(int x = 0; x < groups.size(); x++) {
+			if(groups.get(x).getUID().equals(UID)) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Group with UID: " + UID + ", RETURNING ZERO!");
+		return 0;
+	}
+	public int subUidIndexReturn(String UID) {
+		for(int x = 0; x < subs.size(); x++) {
+			if(subs.get(x).getUID().equals(UID)) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Sub with UID: " + UID + ", RETURNING ZERO!");
+		return 0;
+	}
+	public int channelUidIndexReturn(String UID) {
+		for(int x = 0; x < channels.size(); x++) {
+			if(channels.get(x).getUID().equals(UID)) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Channel with UID: " + UID + ", RETURNING ZERO!");
+		return 0;
+	}
+	public int cuelistUidIndexReturn(String UID) {
+		for(int x = 0; x < cuelists.size(); x++) {
+			if(cuelists.get(x).getUID().equals(UID)) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Cuelist with UID: " + UID + ", RETURNING ZERO!");
+		return 0;
+	}
+	public int macroUidIndexReturn(String UID) {
+		for(int x = 0; x < macros.size(); x++) {
+			if(macros.get(x).getUID().equals(UID)) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Macro with UID: " + UID + ", RETURNING ZERO!");
+		return 0;
+	}
+	public int effectUidIndexReturn(String UID) {
+		for(int x = 0; x < effects.size(); x++) {
+			if(effects.get(x).getUID().equals(UID)) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Effect with UID: " + UID + ", RETURNING ZERO!");
+		return 0;
+	}
+	public int presetUidIndexReturn(String UID) {
+		for(int x = 0; x < presets.size(); x++) {
+			if(presets.get(x).getUID().equals(UID)) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Preset with UID: " + UID + ", RETURNING ZERO!");
+		return 0;
+	}
+	public int intensityPaletteUidIndexReturn(String UID) {
+		for(int x = 0; x < intensityPalettes.size(); x++) {
+			if(intensityPalettes.get(x).getUID().equals(UID)) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Intensity Palette with UID: " + UID + ", RETURNING ZERO!");
+		return 0;
+	}
+	public int focusPaletteUidIndexReturn(String UID) {
+		for(int x = 0; x < focusPalettes.size(); x++) {
+			if(focusPalettes.get(x).getUID().equals(UID)) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Focus Palette with UID: " + UID + ", RETURNING ZERO!");
+		return 0;
+	}
+	public int colorPaletteUidIndexReturn(String UID) {
+		for(int x = 0; x < colorPalettes.size(); x++) {
+			if(colorPalettes.get(x).getUID().equals(UID)) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Color Palette with UID: " + UID + ", RETURNING ZERO!");
+		return 0;
+	}
+	public int beamPaletteUidIndexReturn(String UID) {
+		for(int x = 0; x < beamPalettes.size(); x++) {
+			if(beamPalettes.get(x).getUID().equals(UID)) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Beam Palette with UID: " + UID + ", RETURNING ZERO!");
+		return 0;
+	}
+	
+	/*
+	 * METHODS - MATCH NUMBER then INDEX RETURN
+	 */
+	
+	public int groupNumberIndexReturn(float number) {
+		for(int x = 0; x < groups.size(); x++) {
+			if(groups.get(x).getGroupNum() == number) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Group with Number: " + number + ", RETURNING ZERO!");
+		return 0;
+	}
+	public int subNumberIndexReturn(float number) {
+		for(int x = 0; x < subs.size(); x++) {
+			if(subs.get(x).getSubNum() == number) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Sub with Number: " + number + ", RETURNING ZERO!");
+		return 0;
+	}
+	public int channelNumberIndexReturn(int number) {
+		for(int x = 0; x < channels.size(); x++) {
+			if(channels.get(x).getChannelNum() == number) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Channel with Number: " + number + ", RETURNING ZERO!");
+		return 0;
+	}
+	public int cuelistNumberIndexReturn(int number) {
+		for(int x = 0; x < cuelists.size(); x++) {
+			if(cuelists.get(x).getCuelistNumber() == number) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Cuelist with Number: " + number + ", RETURNING ZERO!");
+		return 0;
+	}
+	public int macroNumberIndexReturn(int number) {
+		for(int x = 0; x < macros.size(); x++) {
+			if(macros.get(x).getMacroNum() == number) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Macro with Number: " + number + ", RETURNING ZERO!");
+		return 0;
+	}
+	public int effectNumberIndexReturn(float number) {
+		for(int x = 0; x < effects.size(); x++) {
+			if(effects.get(x).getEffectNum() == number) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Effect with Number: " + number + ", RETURNING ZERO!");
+		return 0;
+	}
+	public int presetNumberIndexReturn(float number) {
+		for(int x = 0; x < presets.size(); x++) {
+			if(presets.get(x).getPresetNum() == number) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Preset with Number: " + number + ", RETURNING ZERO!");
+		return 0;
+	}
+	public int intensityPaletteNumberIndexReturn(float number) {
+		for(int x = 0; x < intensityPalettes.size(); x++) {
+			if(intensityPalettes.get(x).getPaletteNum() == number) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Intensity Palette with Number: " + number + ", RETURNING ZERO!");
+		return 0;
+	}
+	public int focusPaletteNumberIndexReturn(float number) {
+		for(int x = 0; x < focusPalettes.size(); x++) {
+			if(focusPalettes.get(x).getPaletteNum() == number) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Focus Palette with Number: " + number + ", RETURNING ZERO!");
+		return 0;
+	}
+	public int colorPaletteNumberIndexReturn(float number) {
+		for(int x = 0; x < colorPalettes.size(); x++) {
+			if(colorPalettes.get(x).getPaletteNum() == number) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Color Palette with Number: " + number + ", RETURNING ZERO!");
+		return 0;
+	}
+	public int beamPaletteNumberIndexReturn(float number) {
+		for(int x = 0; x < beamPalettes.size(); x++) {
+			if(beamPalettes.get(x).getPaletteNum() == number) {
+				return x;
+			}
+		}
+		Main.log.error("OSCPARSER: Could not find Beam Palette with Number: " + number + ", RETURNING ZERO!");
+		return 0;
+	}
+	
+	/*
+	 * METHODS - SearchMatch™ Old Methods
+	 */
+	
+	
+	/*
+	 * METHODS - CLEAR ARRAYLISTS
+	 */
+	
+	public void clearGroups() {
+		groups.clear();
+	}
+	public void clearSubs() {
+		subs.clear();
+	}
+	public void clearChannels() {
+		channels.clear();
+	}
+	public void clearCuelists() {
+		cuelists.clear();
+	}
+	public void clearMacros() {
+		macros.clear();
+	}
+	public void clearEffects() {
+		effects.clear();
+	}
+	public void clearPresets() {
+		presets.clear();
+	}
+	public void clearIntensityPalettes() {
+		intensityPalettes.clear();
+	}
+	public void clearFocusPalettes() {
+		focusPalettes.clear();
+	}
+	public void clearColorPalettes() {
+		colorPalettes.clear();
+	}
+	public void clearBeamPalettes() {
+		beamPalettes.clear();
 	}
 
 	/*
 	 * METHODS - INTERFACES
 	 */
+	
 	public void acceptMessage(OSCMessageEvent event) {
-		OSCMessage message = event.getMessage();
+		message = event.getMessage();
+		OscInstance.processingWait = true; //Lock osc sending
+		try {
+			processMessage();
+		}catch(IndexOutOfBoundsException e){
+			Main.log.error("OSCPARSER(1/2): Message triggered an index out of bounds error! Printing address, message & print stack.");
+			e.printStackTrace();
+			Main.log.error("OSCPARSER(2/2): Error report complete.");
+		}
+		OscInstance.processingWait = false; //Unlock OscSending
+	}
+	
+	public void processMessage() {
 		String command = message.getAddress();
 		List<Object> argList = message.getArguments();
+		
+		//For debug
+				//System.out.println(message.getAddress());
+				//System.out.println(message.getArguments());
 		
 		if(command.contains(oscmap.RETURN_VERSION)){								//RETURN_VERSION
 			final String versionText = (String) argList.get(0);
@@ -364,36 +797,29 @@ public class OscParser implements OSCMessageListener {
 			  thread.start();
 		} else if (command.contains(oscmap.RETURN_CUE_COUNT) && format.equals(OscFormat.ETC_EOS) && command.contains("count")) { 		//RETURN_CUE_COUNT for ETC_EOS only
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
-			int cuelistNum = Integer.parseInt(postIndex[5]);
+			final int cuelistNum = Integer.parseInt(postIndex[5]);
 			System.out.println(message.getAddress());
-			final int cuelistIndex = SearchMatch.findCuelistIndex(cuelists, cuelistCount, cuelistNum);
-			final int cueCount = (Integer) argList.get(0);
-			final OscInstance oscTemp = this.oscInstance;
-			Thread thread = new Thread(){
-			    public void run(){
-			    	eventBus.post(new CueCountUpdateEvent(oscTemp, cuelists[cuelistIndex], cueCount));
-			    }
-			  };
+			final int cueNum = (Integer) (argList.get(0));
+			final int cuelistIndex = cuelistNumberIndexReturn(cuelistNum);
+			Thread thread = new Thread() {
+				public void run() {
+					eventBus.post(new CueCountUpdateEvent(oscInstance, cuelists.get(cuelistIndex), cueNum));
+				}
+			};
 			thread.start();
-		} else if (command.contains(oscmap.RETURN_PATCH_INFO) && format.equals(OscFormat.ETC_EOS) && command.contains("list")) {		//RETURN_PATCH_INFO for ETC_EOS only
-			final int indexNum = (Integer) argList.get(0);
+		} else if (command.contains(oscmap.RETURN_PATCH_INFO) && format.equals(OscFormat.ETC_EOS) && command.contains("list") && (argList.size() > 5)) {		//RETURN_PATCH_INFO for ETC_EOS only
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			int channelNumTemp = Integer.parseInt(postIndex[5]);
+			System.out.println(command);
+			System.out.println(argList.size());
 			int addressNum = (Integer) argList.get(5);
 			int level = (Integer) argList.get(7);
 			String manufacturer = (String) argList.get(3);
 			String type = (String) argList.get(4);
 			String UID = (String) argList.get(1);
 			String name = (String) argList.get(2);
-			channels[indexNum] = new Channel(channelNumTemp, addressNum, level, manufacturer, type, name, UID);
-			Thread thread = new Thread(){
-			    public void run(){
-			    	eventBus.post(new ChannelUpdateEvent(oscInstance,channels[indexNum], indexNum));
-			    }
-			  };
-			thread.start();
+			addReplaceChannel(new Channel(channelNumTemp, addressNum, level, manufacturer, type, name, UID));
 		} else if (command.contains(oscmap.RETURN_CUELIST_INFO) && format.equals(OscFormat.ETC_EOS) && !command.contains("links")) {	//RETURN_CUELIST_INFO for ETC_EOS only
-			final int indexNum = (Integer) argList.get(0);
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			int cuelistNumTemp = Integer.parseInt(postIndex[5]);
 			String UID = (String) argList.get(1);
@@ -408,35 +834,22 @@ public class OscParser implements OSCMessageListener {
 			boolean soloMode = (Boolean) argList.get(10);
 			int timecodeList = (Integer) argList.get(11);
 			boolean OOSsync = (Boolean) argList.get(12);
-			cuelists[indexNum] = new Cuelist(cuelistNumTemp, UID, name, playbackMode, faderMode, faderModeIndependence, HTP, assertBool, block, background, soloMode, timecodeList, OOSsync);
-			Thread thread = new Thread(){
-			    public void run(){
-			    	eventBus.post(new CuelistUpdateEvent(oscInstance,cuelists[indexNum], indexNum));
-			    }
-			  };
-			thread.start();	
+			addReplaceCuelist(new Cuelist(cuelistNumTemp, UID, name, playbackMode, faderMode, faderModeIndependence, HTP, assertBool, block, background, soloMode, timecodeList, OOSsync));
 		} else if (command.contains(oscmap.RETURN_GROUP_INFO) && format.equals(OscFormat.ETC_EOS) && !command.contains("channel")) { 	//RETURN_GROUP_INFO for ETC_EOS only --->PART 1<---
-			final int indexNum = (Integer) argList.get(0);
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			float groupNum = Float.parseFloat(postIndex[5]);
 			String UID = (String) argList.get(1);
 			String name = (String) argList.get(2);
-			groups[indexNum] = new Group(UID, name, groupNum); //Get group number from console
-			Thread thread = new Thread(){
-			    public void run(){
-			    	eventBus.post(new GroupUpdateEvent(oscInstance, groups[indexNum], indexNum)); //Post group update event
-			    }
-			  };
-			thread.start();	
+			addReplaceGroup(new Group(UID, name, groupNum)); //Get group number from console	
 		} else if (command.contains(oscmap.RETURN_GROUP_INFO) && format.equals(OscFormat.ETC_EOS) && command.contains("channel")) {		//RETURN_GROUP_INFO for ETC_EOS only --->PART 2<---
-			final int indexNum = (Integer) argList.get(0);
+			String UID = (String) argList.get(1);
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			int varLength = Integer.parseInt(postIndex[9]);
 			for(int x = 2; x < varLength; x++) {
 				String temp = argList.get(x).toString();
 				if(!temp.contains("-")) { 
-					groups[indexNum].addChannel(SearchMatch.findChannel(channels, channelCount,(Integer) argList.get(x)));
-					Main.log.debug("OscParser added Channel " + (Integer) argList.get(x) + " to Group " + groups[indexNum].getGroupNum());
+					groups.get(groupUidIndexReturn(UID)).addChannel(channels.get(channelNumberIndexReturn((Integer) argList.get(x))));
+					Main.log.debug("OscParser added Channel " + (Integer) argList.get(x) + " to Group " + groups.get(groupUidIndexReturn(UID)).getGroupNum());
 				}else { //Split the string if needed
 					String[] chanSplit = temp.split("-");
 					int firstNum = Integer.parseInt(chanSplit[0]); //Calculate the size of the channel array and get channels from the patch list.
@@ -444,48 +857,28 @@ public class OscParser implements OSCMessageListener {
 					int newNum = secondNum - firstNum;
 					if(newNum > 0) { //If the number is positive
 						for(int i = firstNum; i <= secondNum; i++) {
-							groups[indexNum].addChannel(SearchMatch.findChannel(channels, channelCount, i));
-							Main.log.debug("OscParser added Channel " + i + " to Group " + groups[indexNum].getGroupNum());
+							groups.get(groupUidIndexReturn(UID)).addChannel(channels.get(channelNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Channel " + i + " to Group " + groups.get(groupUidIndexReturn(UID)).getGroupNum());
 						}
 					} else if (newNum < 0) { //If the number is negative
 						for(int i = secondNum; i <= firstNum; i++) {
-							groups[indexNum].addChannel(SearchMatch.findChannel(channels, channelCount, i));
-							Main.log.debug("OscParser added Channel " + i + " to Group " + groups[indexNum].getGroupNum());
+							groups.get(groupUidIndexReturn(UID)).addChannel(channels.get(channelNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Channel " + i + " to Group " + groups.get(groupUidIndexReturn(UID)).getGroupNum());
 						}
 					}
 				}
 			}
-			Thread thread = new Thread(){
-			    public void run(){
-			    	eventBus.post(new GroupUpdateEvent(oscInstance, groups[indexNum], indexNum)); //Post group update event
-			    }
-			  };
-			thread.start();	
 		} else if (command.contains(oscmap.RETURN_MACRO_INFO) && format.equals(OscFormat.ETC_EOS) && !command.contains("text")) {		//RETURN_MACRO_INFO for ETC_EOS only --->PART 1<---
-			final int indexNum = (Integer) argList.get(0);
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			float macroNum = Float.parseFloat(postIndex[5]);
 			String UID = (String) argList.get(1);
 			String name = (String) argList.get(2);
 			String mode = (String) argList.get(3);
-			macros[indexNum] = new Macro(macroNum, UID, name, mode);
-			Thread thread = new Thread(){
-			    public void run(){
-			    	eventBus.post(new MacroUpdateEvent(oscInstance, macros[indexNum], indexNum));
-			    }
-			  };
-			thread.start();	
+			addReplaceMacro(new Macro(macroNum, UID, name, mode));
 		} else if (command.contains(oscmap.RETURN_MACRO_INFO) && format.equals(OscFormat.ETC_EOS) && command.contains("text")) {		//RETURN_MACRO_INFO for ETC_EOS only --->PART 2<---
-			final int indexNum = (Integer) argList.get(0);
-			macros[indexNum].addCommandText((String) argList.get(2));
-			Thread thread = new Thread(){
-			    public void run(){
-			    	eventBus.post(new MacroUpdateEvent(oscInstance, macros[indexNum], indexNum));
-			    }
-			  };
-			thread.start();	
+			String UID = (String) argList.get(1);
+			macros.get(macroUidIndexReturn(UID)).addCommandText((String) argList.get(2));
 		} else if (command.contains(oscmap.RETURN_EFFECT_INFO) && format.equals(OscFormat.ETC_EOS)) {									//RETURN_EFFECT_INFO for ETC_EOS only
-			final int indexNum = (Integer) argList.get(0);
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			float fxNum = Float.parseFloat(postIndex[5]);
 			String UID = (String) argList.get(1);
@@ -495,15 +888,8 @@ public class OscParser implements OSCMessageListener {
 			String exit = (String) argList.get(4);
 			String duration = (String) argList.get(5);
 			String scale = (String) argList.get(6);
-			effects[indexNum] = new Effect(fxNum, UID, name, effectType, entry, exit, duration, scale);
-			Thread thread = new Thread(){
-			    public void run(){
-			    	eventBus.post(new EffectUpdateEvent(oscInstance, effects[indexNum], indexNum));
-			    }
-			  };
-			thread.start();
+			addReplaceEffect(new Effect(fxNum, UID, name, effectType, entry, exit, duration, scale));
 		} else if (command.contains(oscmap.RETURN_SUB_INFO) && format.equals(OscFormat.ETC_EOS) && !command.contains("fx")) {			//RETURN_SUB_INFO for ETC_EOS only --->PART 1<---
-			final int indexNum = (Integer) argList.get(0);
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			float subNum = Integer.parseInt(postIndex[5]);
 			String UID = (String) argList.get(1);
@@ -518,22 +904,16 @@ public class OscParser implements OSCMessageListener {
 			String upTime = (String) argList.get(10);
 			String dwellTime = (String) argList.get(11);
 			String downTime = (String) argList.get(12);
-			subs[indexNum] = new Sub(subNum, UID, name, mode, faderMode, HTP, exclusive, background, restore, priority, upTime, dwellTime, downTime);
-			Thread thread = new Thread(){
-			    public void run(){
-			    	eventBus.post(new SubUpdateEvent(oscInstance, subs[indexNum], indexNum));
-			    }
-			  };
-			thread.start();
+			addReplaceSub(new Sub(subNum, UID, name, mode, faderMode, HTP, exclusive, background, restore, priority, upTime, dwellTime, downTime));
 		} else if (command.contains(oscmap.RETURN_SUB_INFO) && format.equals(OscFormat.ETC_EOS) && command.contains("fx")) {			//RETURN_SUB_INFO for ETC_EOS only --->PART 2<---
-			final int indexNum = (Integer) argList.get(0);
+			String UID = (String) argList.get(1);
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			int varLength = Integer.parseInt(postIndex[9]);
 			for(int x = 2; x < varLength; x++) {
 				String temp = argList.get(x).toString();
 				if(!temp.contains("-")) { 
-					subs[indexNum].addEffect(SearchMatch.findEffect(effects, effectCount,(Integer) argList.get(x)));
-					Main.log.debug("OscParser added Effect " + (Integer) argList.get(x) + " to Sub " + subs[indexNum].getSubNum());
+					subs.get(subUidIndexReturn(UID)).addEffect(effects.get(effectNumberIndexReturn(x)));
+					Main.log.debug("OscParser added Effect " + (Integer) argList.get(x) + " to Sub " + subs.get(subUidIndexReturn(UID)).getSubNum());
 				} else {
 					String[] fxSplit = temp.split("-");
 					int firstNum = Integer.parseInt(fxSplit[0]); //Calculate the size of the channel array and get channels from the patch list.
@@ -541,46 +921,38 @@ public class OscParser implements OSCMessageListener {
 					int newNum = secondNum - firstNum;
 					if(newNum > 0) { //If the number is positive
 						for(int i = firstNum; i <= secondNum; i++) {
-							subs[indexNum].addEffect(SearchMatch.findEffect(effects, effectCount, i));
-							Main.log.debug("OscParser added Effect " + i + " to Sub " + subs[indexNum].getSubNum());
+							subs.get(subUidIndexReturn(UID)).addEffect(effects.get(effectNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Effect " + i + " to Sub " + subs.get(subUidIndexReturn(UID)).getSubNum());
 						}
 					} else if (newNum < 0) { //If the number is negative
 						for(int i = secondNum; i <= firstNum; i++) {
-							subs[indexNum].addEffect(SearchMatch.findEffect(effects, effectCount, i));
-							Main.log.debug("OscParser added Effect " + i + " to Sub " + subs[indexNum].getSubNum());
+							subs.get(subUidIndexReturn(UID)).addEffect(effects.get(effectNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Effect " + i + " to Sub " + subs.get(subUidIndexReturn(UID)).getSubNum());
 						}
 					}
 				}
 			}
-			Thread thread = new Thread(){
-			    public void run(){
-			    	eventBus.post(new SubUpdateEvent(oscInstance, subs[indexNum], indexNum));
-			    }
-			  };
-			thread.start();
 		} else if (command.contains(oscmap.RETURN_PRESET_INFO) && format.equals(OscFormat.ETC_EOS) && 
 				!command.contains("channels") && !command.contains("byType") && !command.contains("fx")) {								//RETURN_PRESET_INFO for ETC_EOS only --->PART 1<---
 			
-			int indexNum = (Integer) argList.get(0);
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			float presetNum = Integer.parseInt(postIndex[5]);
 			String UID = (String) argList.get(1);
 			String name = (String) argList.get(2);
 			boolean absolute = (Boolean) argList.get(3);
 			boolean locked = (Boolean) argList.get(4);
-			presets[indexNum] = new Preset(presetNum, UID, name, absolute, locked);
-			eventBus.post(new PresetUpdateEvent(this.oscInstance, presets[indexNum], indexNum));
+			addReplacePreset(new Preset(presetNum, UID, name, absolute, locked));
 		} else if (command.contains(oscmap.RETURN_PRESET_INFO) && format.equals(OscFormat.ETC_EOS) && 
 				command.contains("channels") && !command.contains("byType") && !command.contains("fx")) {								//RETURN_PRESET_INFO for ETC_EOS only --->PART 2<---
 			
-			int indexNum = (Integer) argList.get(0);
+			String UID = (String) argList.get(1);
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			int varLength = Integer.parseInt(postIndex[9]);
 			for(int x = 2; x < varLength; x++) {
 				String temp = argList.get(x).toString();
 				if(!temp.contains("-")) { 
-					presets[indexNum].addChannel(SearchMatch.findChannel(channels, channelCount,(Integer) argList.get(x)));
-					Main.log.debug("OscParser added Channel " + (Integer) argList.get(x) + " to Preset " + presets[indexNum].getPresetNum());
+					presets.get(presetUidIndexReturn(UID)).addChannel(channels.get(channelNumberIndexReturn(x)));
+					Main.log.debug("OscParser added Channel " + (Integer) argList.get(x) + " to Preset " + presets.get(presetUidIndexReturn(UID)).getPresetNum());
 				}else { //Split the string if needed
 					String[] chanSplit = temp.split("-");
 					int firstNum = Integer.parseInt(chanSplit[0]); //Calculate the size of the channel array and get channels from the patch list.
@@ -588,29 +960,28 @@ public class OscParser implements OSCMessageListener {
 					int newNum = secondNum - firstNum;
 					if(newNum > 0) { //If the number is positive
 						for(int i = firstNum; i <= secondNum; i++) {
-							presets[indexNum].addChannel(SearchMatch.findChannel(channels, channelCount, i));
-							Main.log.debug("OscParser added Channel " + i + " to Preset " + presets[indexNum].getPresetNum());
+							presets.get(presetUidIndexReturn(UID)).addChannel(channels.get(channelNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Channel " + i + " to Preset " + presets.get(presetUidIndexReturn(UID)).getPresetNum());
 						}
 					} else if (newNum < 0) { //If the number is negative
 						for(int i = secondNum; i <= firstNum; i++) {
-							presets[indexNum].addChannel(SearchMatch.findChannel(channels, channelCount, i));
-							Main.log.debug("OscParser added Channel " + i + " to Preset " + presets[indexNum].getPresetNum());
+							presets.get(presetUidIndexReturn(UID)).addChannel(channels.get(channelNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Channel " + i + " to Preset " + presets.get(presetUidIndexReturn(UID)).getPresetNum());
 						}
 					}
 				}
 			}
-			eventBus.post(new PresetUpdateEvent(this.oscInstance, presets[indexNum], indexNum));
 		} else if (command.contains(oscmap.RETURN_PRESET_INFO) && format.equals(OscFormat.ETC_EOS) && 
 				!command.contains("channels") && !command.contains("byType") && command.contains("fx")) {								//RETURN_PRESET_INFO for ETC_EOS only --->PART 3<---
 			
-			int indexNum = (Integer) argList.get(0);
+			String UID = (String) argList.get(1);
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			int varLength = Integer.parseInt(postIndex[9]);
 			for(int x = 2; x < varLength; x++) {
 				String temp = argList.get(x).toString();
 				if(!temp.contains("-")) { 
-					presets[indexNum].addEffect(SearchMatch.findEffect(effects, effectCount,(Integer) argList.get(x)));
-					Main.log.debug("OscParser added Effect " + (Integer) argList.get(x) + " to Preset " + presets[indexNum].getPresetNum());
+					presets.get(presetUidIndexReturn(UID)).addEffect(effects.get(effectNumberIndexReturn(x)));
+					Main.log.debug("OscParser added Effect " + (Integer) argList.get(x) + " to Preset " + presets.get(presetUidIndexReturn(UID)).getPresetNum());
 				} else {
 					String[] fxSplit = temp.split("-");
 					int firstNum = Integer.parseInt(fxSplit[0]); //Calculate the size of the channel array and get channels from the patch list.
@@ -618,41 +989,38 @@ public class OscParser implements OSCMessageListener {
 					int newNum = secondNum - firstNum;
 					if(newNum > 0) { //If the number is positive
 						for(int i = firstNum; i <= secondNum; i++) {
-							presets[indexNum].addEffect(SearchMatch.findEffect(effects, effectCount, i));
-							Main.log.debug("OscParser added Effect " + i + " to Preset " + presets[indexNum].getPresetNum());
+							presets.get(presetUidIndexReturn(UID)).addEffect(effects.get(effectNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Effect " + i + " to Preset " + presets.get(presetUidIndexReturn(UID)).getPresetNum());
 						}
 					} else if (newNum < 0) { //If the number is negative
 						for(int i = secondNum; i <= firstNum; i++) {
-							presets[indexNum].addEffect(SearchMatch.findEffect(effects, effectCount, i));
-							Main.log.debug("OscParser added Effect " + i + " to Preset " + presets[indexNum].getPresetNum());
+							presets.get(presetUidIndexReturn(UID)).addEffect(effects.get(effectNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Effect " + i + " to Preset " + presets.get(presetUidIndexReturn(UID)).getPresetNum());
 						}
 					}
 				}
 			}
-			eventBus.post(new PresetUpdateEvent(this.oscInstance, presets[indexNum], indexNum));
 		} else if (command.contains(oscmap.RETURN_INTENSITY_PALETTE_INFO) && format.equals(OscFormat.ETC_EOS) &&
 				!command.contains("channels") && !command.contains("byType") && !command.contains("fx")) {					//RETURN_INTENSITY_PALETTE_INFO for ETC_EOS only --->PART 1<---
 			
-			int indexNum = (Integer) argList.get(0);
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			float ipNum = Integer.parseInt(postIndex[5]);
 			String UID = (String) argList.get(1);
 			String name = (String) argList.get(2);
 			boolean absolute = (Boolean) argList.get(3);
 			boolean locked = (Boolean) argList.get(4);
-			intensityPalettes[indexNum] = new IntensityPalette(ipNum, UID, name, absolute, locked);
-			eventBus.post(new IntensityPaletteUpdateEvent(this.oscInstance, intensityPalettes[indexNum], indexNum));
+			addReplaceIntensityPalette(new IntensityPalette(ipNum, UID, name, absolute, locked));
 		} else if (command.contains(oscmap.RETURN_INTENSITY_PALETTE_INFO) && format.equals(OscFormat.ETC_EOS) &&
 				command.contains("channels") && !command.contains("byType") && !command.contains("fx")) {					//RETURN_INTENSITY_PALETTE_INFO for ETC_EOS only --->PART 2<---
 			
-			int indexNum = (Integer) argList.get(0);
+			String UID = (String) argList.get(1);
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			int varLength = Integer.parseInt(postIndex[9]);
 			for(int x = 2; x < varLength; x++) {
 				String temp = argList.get(x).toString();
 				if(!temp.contains("-")) { 
-					intensityPalettes[indexNum].addChannel(SearchMatch.findChannel(channels, channelCount,(Integer) argList.get(x)));
-					Main.log.debug("OscParser added Channel " + (Integer) argList.get(x) + " to Intensity Palette " + intensityPalettes[indexNum].getPaletteNum());
+					intensityPalettes.get(intensityPaletteUidIndexReturn(UID)).addChannel(channels.get(channelNumberIndexReturn(x)));
+					Main.log.debug("OscParser added Channel " + (Integer) argList.get(x) + " to Intensity Palette " + intensityPalettes.get(intensityPaletteUidIndexReturn(UID)).getPaletteNum());
 				}else { //Split the string if needed
 					String[] chanSplit = temp.split("-");
 					int firstNum = Integer.parseInt(chanSplit[0]); //Calculate the size of the channel array and get channels from the patch list.
@@ -660,29 +1028,28 @@ public class OscParser implements OSCMessageListener {
 					int newNum = secondNum - firstNum;
 					if(newNum > 0) { //If the number is positive
 						for(int i = firstNum; i <= secondNum; i++) {
-							intensityPalettes[indexNum].addChannel(SearchMatch.findChannel(channels, channelCount, i));
-							Main.log.debug("OscParser added Channel " + i + " to Intensity Palette " + intensityPalettes[indexNum].getPaletteNum());
+							intensityPalettes.get(intensityPaletteUidIndexReturn(UID)).addChannel(channels.get(channelNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Channel " + i + " to Intensity Palette " + intensityPalettes.get(intensityPaletteUidIndexReturn(UID)).getPaletteNum());
 						}
 					} else if (newNum < 0) { //If the number is negative
 						for(int i = secondNum; i <= firstNum; i++) {
-							intensityPalettes[indexNum].addChannel(SearchMatch.findChannel(channels, channelCount, i));
-							Main.log.debug("OscParser added Channel " + i + " to Intensity Palette " + intensityPalettes[indexNum].getPaletteNum());
+							intensityPalettes.get(intensityPaletteUidIndexReturn(UID)).addChannel(channels.get(channelNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Channel " + i + " to Intensity Palette " + intensityPalettes.get(intensityPaletteUidIndexReturn(UID)).getPaletteNum());
 						}
 					}
 				}
 			}
-			eventBus.post(new IntensityPaletteUpdateEvent(this.oscInstance, intensityPalettes[indexNum], indexNum));
 		} else if (command.contains(oscmap.RETURN_INTENSITY_PALETTE_INFO) && format.equals(OscFormat.ETC_EOS) &&
 				!command.contains("channels") && !command.contains("byType") && command.contains("fx")) {					//RETURN_INTENSITY_PALETTE_INFO for ETC_EOS only --->PART 3<---
 			
-			int indexNum = (Integer) argList.get(0);
+			String UID = (String) argList.get(1);
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			int varLength = Integer.parseInt(postIndex[9]);
 			for(int x = 2; x < varLength; x++) {
 				String temp = argList.get(x).toString();
 				if(!temp.contains("-")) { 
-					intensityPalettes[indexNum].addEffect(SearchMatch.findEffect(effects, effectCount,(Integer) argList.get(x)));
-					Main.log.debug("OscParser added Effect " + (Integer) argList.get(x) + " to Focus Palette " + intensityPalettes[indexNum].getPaletteNum());
+					intensityPalettes.get(intensityPaletteUidIndexReturn(UID)).addEffect(effects.get(effectNumberIndexReturn(x)));
+					Main.log.debug("OscParser added Effect " + (Integer) argList.get(x) + " to Focus Palette " + intensityPalettes.get(intensityPaletteUidIndexReturn(UID)).getPaletteNum());
 				} else {
 					String[] fxSplit = temp.split("-");
 					int firstNum = Integer.parseInt(fxSplit[0]); //Calculate the size of the channel array and get channels from the patch list.
@@ -690,41 +1057,37 @@ public class OscParser implements OSCMessageListener {
 					int newNum = secondNum - firstNum;
 					if(newNum > 0) { //If the number is positive
 						for(int i = firstNum; i <= secondNum; i++) {
-							intensityPalettes[indexNum].addEffect(SearchMatch.findEffect(effects, effectCount, i));
-							Main.log.debug("OscParser added Effect " + i + " to Focus Palette " + intensityPalettes[indexNum].getPaletteNum());
+							intensityPalettes.get(intensityPaletteUidIndexReturn(UID)).addEffect(effects.get(effectNumberIndexReturn(x)));
+							Main.log.debug("OscParser added Effect " + i + " to Focus Palette " + intensityPalettes.get(intensityPaletteUidIndexReturn(UID)).getPaletteNum());
 						}
 					} else if (newNum < 0) { //If the number is negative
 						for(int i = secondNum; i <= firstNum; i++) {
-							intensityPalettes[indexNum].addEffect(SearchMatch.findEffect(effects, effectCount, i));
-							Main.log.debug("OscParser added Effect " + i + " to Focus Palette " + intensityPalettes[indexNum].getPaletteNum());
+							intensityPalettes.get(intensityPaletteUidIndexReturn(UID)).addEffect(effects.get(effectNumberIndexReturn(x)));
+							Main.log.debug("OscParser added Effect " + i + " to Focus Palette " + intensityPalettes.get(intensityPaletteUidIndexReturn(UID)).getPaletteNum());
 						}
 					}
 				}
 			}
-			eventBus.post(new IntensityPaletteUpdateEvent(this.oscInstance, intensityPalettes[indexNum], indexNum));
 		}  else if (command.contains(oscmap.RETURN_FOCUS_PALETTE_INFO) && format.equals(OscFormat.ETC_EOS) &&
 				!command.contains("channels") && !command.contains("byType") && !command.contains("fx")) {					//RETURN_FOCUS_PALETTE_INFO for ETC_EOS only --->PART 1<---
-			
-			int indexNum = (Integer) argList.get(0);
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			float fpNum = Integer.parseInt(postIndex[5]);
 			String UID = (String) argList.get(1);
 			String name = (String) argList.get(2);
 			boolean absolute = (Boolean) argList.get(3);
 			boolean locked = (Boolean) argList.get(4);
-			focusPalettes[indexNum] = new FocusPalette(fpNum, UID, name, absolute, locked);
-			eventBus.post(new FocusPaletteUpdateEvent(this.oscInstance, focusPalettes[indexNum], indexNum));
+			addReplaceFocusPalette(new FocusPalette(fpNum, UID, name, absolute, locked));
 		} else if (command.contains(oscmap.RETURN_FOCUS_PALETTE_INFO) && format.equals(OscFormat.ETC_EOS) &&
 				command.contains("channels") && !command.contains("byType") && !command.contains("fx")) {					//RETURN_FOCUS_PALETTE_INFO for ETC_EOS only --->PART 2<---
 			
-			int indexNum = (Integer) argList.get(0);
+			String UID = (String) argList.get(1);
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			int varLength = Integer.parseInt(postIndex[9]);
 			for(int x = 2; x < varLength; x++) {
 				String temp = argList.get(x).toString();
 				if(!temp.contains("-")) { 
-					focusPalettes[indexNum].addChannel(SearchMatch.findChannel(channels, channelCount,(Integer) argList.get(x)));
-					Main.log.debug("OscParser added Channel " + (Integer) argList.get(x) + " to Focus Palette " + focusPalettes[indexNum].getPaletteNum());
+					focusPalettes.get(focusPaletteUidIndexReturn(UID)).addChannel(channels.get(channelNumberIndexReturn(x)));
+					Main.log.debug("OscParser added Channel " + (Integer) argList.get(x) + " to Focus Palette " + focusPalettes.get(focusPaletteUidIndexReturn(UID)).getPaletteNum());
 				}else { //Split the string if needed
 					String[] chanSplit = temp.split("-");
 					int firstNum = Integer.parseInt(chanSplit[0]); //Calculate the size of the channel array and get channels from the patch list.
@@ -732,29 +1095,28 @@ public class OscParser implements OSCMessageListener {
 					int newNum = secondNum - firstNum;
 					if(newNum > 0) { //If the number is positive
 						for(int i = firstNum; i <= secondNum; i++) {
-							focusPalettes[indexNum].addChannel(SearchMatch.findChannel(channels, channelCount, i));
-							Main.log.debug("OscParser added Channel " + i + " to Focus Palette " + focusPalettes[indexNum].getPaletteNum());
+							focusPalettes.get(focusPaletteUidIndexReturn(UID)).addChannel(channels.get(channelNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Channel " + i + " to Focus Palette " + focusPalettes.get(focusPaletteUidIndexReturn(UID)).getPaletteNum());
 						}
 					} else if (newNum < 0) { //If the number is negative
 						for(int i = secondNum; i <= firstNum; i++) {
-							focusPalettes[indexNum].addChannel(SearchMatch.findChannel(channels, channelCount, i));
-							Main.log.debug("OscParser added Channel " + i + " to Focus Palette " + focusPalettes[indexNum].getPaletteNum());
+							focusPalettes.get(focusPaletteUidIndexReturn(UID)).addChannel(channels.get(channelNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Channel " + i + " to Focus Palette " + focusPalettes.get(focusPaletteUidIndexReturn(UID)).getPaletteNum());
 						}
 					}
 				}
 			}
-			eventBus.post(new FocusPaletteUpdateEvent(this.oscInstance, focusPalettes[indexNum], indexNum));
 		} else if (command.contains(oscmap.RETURN_FOCUS_PALETTE_INFO) && format.equals(OscFormat.ETC_EOS) &&
 				!command.contains("channels") && !command.contains("byType") && command.contains("fx")) {					//RETURN_FOCUS_PALETTE_INFO for ETC_EOS only --->PART 3<---
 			
-			int indexNum = (Integer) argList.get(0);
+			String UID = (String) argList.get(1);
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			int varLength = Integer.parseInt(postIndex[9]);
 			for(int x = 2; x < varLength; x++) {
 				String temp = argList.get(x).toString();
 				if(!temp.contains("-")) { 
-					focusPalettes[indexNum].addEffect(SearchMatch.findEffect(effects, effectCount,(Integer) argList.get(x)));
-					Main.log.debug("OscParser added Effect " + (Integer) argList.get(x) + " to Focus Palette " + focusPalettes[indexNum].getPaletteNum());
+					focusPalettes.get(focusPaletteUidIndexReturn(UID)).addEffect(effects.get(channelNumberIndexReturn(x)));
+					Main.log.debug("OscParser added Effect " + (Integer) argList.get(x) + " to Focus Palette " + focusPalettes.get(focusPaletteUidIndexReturn(UID)).getPaletteNum());
 				} else {
 					String[] fxSplit = temp.split("-");
 					int firstNum = Integer.parseInt(fxSplit[0]); //Calculate the size of the channel array and get channels from the patch list.
@@ -762,18 +1124,17 @@ public class OscParser implements OSCMessageListener {
 					int newNum = secondNum - firstNum;
 					if(newNum > 0) { //If the number is positive
 						for(int i = firstNum; i <= secondNum; i++) {
-							focusPalettes[indexNum].addEffect(SearchMatch.findEffect(effects, effectCount, i));
-							Main.log.debug("OscParser added Effect " + i + " to Focus Palette " + focusPalettes[indexNum].getPaletteNum());
+							focusPalettes.get(focusPaletteUidIndexReturn(UID)).addEffect(effects.get(channelNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Effect " + i + " to Focus Palette " + focusPalettes.get(focusPaletteUidIndexReturn(UID)).getPaletteNum());
 						}
 					} else if (newNum < 0) { //If the number is negative
 						for(int i = secondNum; i <= firstNum; i++) {
-							focusPalettes[indexNum].addEffect(SearchMatch.findEffect(effects, effectCount, i));
-							Main.log.debug("OscParser added Effect " + i + " to Focus Palette " + focusPalettes[indexNum].getPaletteNum());
+							focusPalettes.get(focusPaletteUidIndexReturn(UID)).addEffect(effects.get(channelNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Effect " + i + " to Focus Palette " + focusPalettes.get(focusPaletteUidIndexReturn(UID)).getPaletteNum());
 						}
 					}
 				}
 			}
-			eventBus.post(new FocusPaletteUpdateEvent(this.oscInstance, focusPalettes[indexNum], indexNum));
 		} else if (command.contains(oscmap.RETURN_COLOR_PALETTE_INFO) && format.equals(OscFormat.ETC_EOS) &&
 				!command.contains("channels") && !command.contains("byType") && !command.contains("fx")) {					//RETURN_COLOR_PALETTE_INFO for ETC_EOS only --->PART 1<---
 			
@@ -784,19 +1145,18 @@ public class OscParser implements OSCMessageListener {
 			String name = (String) argList.get(2);
 			boolean absolute = (Boolean) argList.get(3);
 			boolean locked = (Boolean) argList.get(4);
-			colorPalettes[indexNum] = new ColorPalette(cpNum, UID, name, absolute, locked);
-			eventBus.post(new ColorPaletteUpdateEvent(this.oscInstance, colorPalettes[indexNum], indexNum));
+			addReplaceColorPalette(new ColorPalette(cpNum, UID, name, absolute, locked));
 		} else if (command.contains(oscmap.RETURN_COLOR_PALETTE_INFO) && format.equals(OscFormat.ETC_EOS) &&
 				command.contains("channels") && !command.contains("byType") && !command.contains("fx")) {					//RETURN_COLOR_PALETTE_INFO for ETC_EOS only --->PART 2<---
 			
-			int indexNum = (Integer) argList.get(0);
+			String UID = (String) argList.get(1);
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			int varLength = Integer.parseInt(postIndex[9]);
 			for(int x = 2; x < varLength; x++) {
 				String temp = argList.get(x).toString();
 				if(!temp.contains("-")) { 
-					colorPalettes[indexNum].addChannel(SearchMatch.findChannel(channels, channelCount,(Integer) argList.get(x)));
-					Main.log.debug("OscParser added Channel " + (Integer) argList.get(x) + " to Color Palette " + colorPalettes[indexNum].getPaletteNum());
+					colorPalettes.get(colorPaletteUidIndexReturn(UID)).addChannel(channels.get(channelNumberIndexReturn(x)));
+					Main.log.debug("OscParser added Channel " + (Integer) argList.get(x) + " to Color Palette " + colorPalettes.get(colorPaletteUidIndexReturn(UID)).getPaletteNum());
 				}else { //Split the string if needed
 					String[] chanSplit = temp.split("-");
 					int firstNum = Integer.parseInt(chanSplit[0]); //Calculate the size of the channel array and get channels from the patch list.
@@ -804,29 +1164,28 @@ public class OscParser implements OSCMessageListener {
 					int newNum = secondNum - firstNum;
 					if(newNum > 0) { //If the number is positive
 						for(int i = firstNum; i <= secondNum; i++) {
-							colorPalettes[indexNum].addChannel(SearchMatch.findChannel(channels, channelCount, i));
-							Main.log.debug("OscParser added Channel " + i + " to Color Palette " + colorPalettes[indexNum].getPaletteNum());
+							colorPalettes.get(colorPaletteUidIndexReturn(UID)).addChannel(channels.get(channelNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Channel " + i + " to Color Palette " + colorPalettes.get(colorPaletteUidIndexReturn(UID)).getPaletteNum());
 						}
 					} else if (newNum < 0) { //If the number is negative
 						for(int i = secondNum; i <= firstNum; i++) {
-							colorPalettes[indexNum].addChannel(SearchMatch.findChannel(channels, channelCount, i));
-							Main.log.debug("OscParser added Channel " + i + " to Color Palette " + colorPalettes[indexNum].getPaletteNum());
+							colorPalettes.get(colorPaletteUidIndexReturn(UID)).addChannel(channels.get(channelNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Channel " + i + " to Color Palette " + colorPalettes.get(colorPaletteUidIndexReturn(UID)).getPaletteNum());
 						}
 					}
 				}
 			}
-			eventBus.post(new ColorPaletteUpdateEvent(this.oscInstance, colorPalettes[indexNum], indexNum));
 		} else if (command.contains(oscmap.RETURN_COLOR_PALETTE_INFO) && format.equals(OscFormat.ETC_EOS) &&
 				!command.contains("channels") && !command.contains("byType") && command.contains("fx")) {					//RETURN_COLOR_PALETTE_INFO for ETC_EOS only --->PART 3<---
 			
-			int indexNum = (Integer) argList.get(0);
+			String UID = (String) argList.get(1);
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			int varLength = Integer.parseInt(postIndex[9]);
 			for(int x = 2; x < varLength; x++) {
 				String temp = argList.get(x).toString();
 				if(!temp.contains("-")) { 
-					colorPalettes[indexNum].addEffect(SearchMatch.findEffect(effects, effectCount,(Integer) argList.get(x)));
-					Main.log.debug("OscParser added Effect " + (Integer) argList.get(x) + " to Color Palette " + colorPalettes[indexNum].getPaletteNum());
+					colorPalettes.get(colorPaletteUidIndexReturn(UID)).addEffect(effects.get(effectNumberIndexReturn(x)));
+					Main.log.debug("OscParser added Effect " + (Integer) argList.get(x) + " to Color Palette " + colorPalettes.get(colorPaletteUidIndexReturn(UID)).getPaletteNum());
 				} else {
 					String[] fxSplit = temp.split("-");
 					int firstNum = Integer.parseInt(fxSplit[0]); //Calculate the size of the channel array and get channels from the patch list.
@@ -834,18 +1193,17 @@ public class OscParser implements OSCMessageListener {
 					int newNum = secondNum - firstNum;
 					if(newNum > 0) { //If the number is positive
 						for(int i = firstNum; i <= secondNum; i++) {
-							colorPalettes[indexNum].addEffect(SearchMatch.findEffect(effects, effectCount, i));
-							Main.log.debug("OscParser added Effect " + i + " to Color Palette " + colorPalettes[indexNum].getPaletteNum());
+							colorPalettes.get(colorPaletteUidIndexReturn(UID)).addEffect(effects.get(effectNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Effect " + i + " to Color Palette " + colorPalettes.get(colorPaletteUidIndexReturn(UID)).getPaletteNum());
 						}
 					} else if (newNum < 0) { //If the number is negative
 						for(int i = secondNum; i <= firstNum; i++) {
-							colorPalettes[indexNum].addEffect(SearchMatch.findEffect(effects, effectCount, i));
-							Main.log.debug("OscParser added Effect " + i + " to Color Palette " + colorPalettes[indexNum].getPaletteNum());
+							colorPalettes.get(colorPaletteUidIndexReturn(UID)).addEffect(effects.get(effectNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Effect " + i + " to Color Palette " + colorPalettes.get(colorPaletteUidIndexReturn(UID)).getPaletteNum());
 						}
 					}
 				}
 			}
-			eventBus.post(new ColorPaletteUpdateEvent(this.oscInstance, colorPalettes[indexNum], indexNum));
 		} else if (command.contains(oscmap.RETURN_BEAM_PALETTE_INFO) && format.equals(OscFormat.ETC_EOS) &&
 				!command.contains("channels") && !command.contains("byType") && !command.contains("fx")) {					//RETURN_BEAM_PALETTE_INFO for ETC_EOS only --->PART 1<---
 			
@@ -856,19 +1214,18 @@ public class OscParser implements OSCMessageListener {
 			String name = (String) argList.get(2);
 			boolean absolute = (Boolean) argList.get(3);
 			boolean locked = (Boolean) argList.get(4);
-			beamPalettes[indexNum] = new BeamPalette(bpNum, UID, name, absolute, locked);
-			eventBus.post(new BeamPaletteUpdateEvent(this.oscInstance, beamPalettes[indexNum], indexNum));
+			addReplaceBeamPalette(new BeamPalette(bpNum, UID, name, absolute, locked));
 		} else if (command.contains(oscmap.RETURN_BEAM_PALETTE_INFO) && format.equals(OscFormat.ETC_EOS) &&
 				command.contains("channels") && !command.contains("byType") && !command.contains("fx")) {					//RETURN_BEAM_PALETTE_INFO for ETC_EOS only --->PART 2<---
 			
-			int indexNum = (Integer) argList.get(0);
+			String UID = (String) argList.get(1);
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			int varLength = Integer.parseInt(postIndex[9]);
 			for(int x = 2; x < varLength; x++) {
 				String temp = argList.get(x).toString();
 				if(!temp.contains("-")) { 
-					beamPalettes[indexNum].addChannel(SearchMatch.findChannel(channels, channelCount,(Integer) argList.get(x)));
-					Main.log.debug("OscParser added Channel " + (Integer) argList.get(x) + " to Beam Palette " + beamPalettes[indexNum].getPaletteNum());
+					beamPalettes.get(beamPaletteUidIndexReturn(UID)).addChannel(channels.get(channelNumberIndexReturn(x)));
+					Main.log.debug("OscParser added Channel " + (Integer) argList.get(x) + " to Beam Palette " + beamPalettes.get(beamPaletteUidIndexReturn(UID)).getPaletteNum());
 				}else { //Split the string if needed
 					String[] chanSplit = temp.split("-");
 					int firstNum = Integer.parseInt(chanSplit[0]); //Calculate the size of the channel array and get channels from the patch list.
@@ -876,29 +1233,28 @@ public class OscParser implements OSCMessageListener {
 					int newNum = secondNum - firstNum;
 					if(newNum > 0) { //If the number is positive
 						for(int i = firstNum; i <= secondNum; i++) {
-							beamPalettes[indexNum].addChannel(SearchMatch.findChannel(channels, channelCount, i));
-							Main.log.debug("OscParser added Channel " + i + " to Beam Palette " + beamPalettes[indexNum].getPaletteNum());
+							beamPalettes.get(beamPaletteUidIndexReturn(UID)).addChannel(channels.get(channelNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Channel " + i + " to Beam Palette " + beamPalettes.get(beamPaletteUidIndexReturn(UID)).getPaletteNum());
 						}
 					} else if (newNum < 0) { //If the number is negative
 						for(int i = secondNum; i <= firstNum; i++) {
-							beamPalettes[indexNum].addChannel(SearchMatch.findChannel(channels, channelCount, i));
-							Main.log.debug("OscParser added Channel " + i + " to Beam Palette " + beamPalettes[indexNum].getPaletteNum());
+							beamPalettes.get(beamPaletteUidIndexReturn(UID)).addChannel(channels.get(channelNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Channel " + i + " to Beam Palette " + beamPalettes.get(beamPaletteUidIndexReturn(UID)).getPaletteNum());
 						}
 					}
 				}
 			}
-			eventBus.post(new BeamPaletteUpdateEvent(this.oscInstance, beamPalettes[indexNum], indexNum));
 		} else if (command.contains(oscmap.RETURN_BEAM_PALETTE_INFO) && format.equals(OscFormat.ETC_EOS) &&
 				!command.contains("channels") && !command.contains("byType") && command.contains("fx")) {					//RETURN_BEAM_PALETTE_INFO for ETC_EOS only --->PART 3<---
 			
-			int indexNum = (Integer) argList.get(0);
+			String UID = (String) argList.get(1);
 			String[] postIndex = command.split("/"); //See EosFamily_ShowControl_UserGuide_RevC.pdf, page 70, for more details on this whole section.
 			int varLength = Integer.parseInt(postIndex[9]);
 			for(int x = 2; x < varLength; x++) {
 				String temp = argList.get(x).toString();
 				if(!temp.contains("-")) { 
-					beamPalettes[indexNum].addEffect(SearchMatch.findEffect(effects, effectCount,(Integer) argList.get(x)));
-					Main.log.debug("OscParser added Effect " + (Integer) argList.get(x) + " to Beam Palette " + beamPalettes[indexNum].getPaletteNum());
+					beamPalettes.get(beamPaletteUidIndexReturn(UID)).addEffect(effects.get(effectNumberIndexReturn(x)));
+					Main.log.debug("OscParser added Effect " + (Integer) argList.get(x) + " to Beam Palette " + beamPalettes.get(beamPaletteUidIndexReturn(UID)).getPaletteNum());
 				} else {
 					String[] fxSplit = temp.split("-");
 					int firstNum = Integer.parseInt(fxSplit[0]); //Calculate the size of the channel array and get channels from the patch list.
@@ -906,18 +1262,17 @@ public class OscParser implements OSCMessageListener {
 					int newNum = secondNum - firstNum;
 					if(newNum > 0) { //If the number is positive
 						for(int i = firstNum; i <= secondNum; i++) {
-							beamPalettes[indexNum].addEffect(SearchMatch.findEffect(effects, effectCount, i));
-							Main.log.debug("OscParser added Effect " + i + " to Beam Palette " + beamPalettes[indexNum].getPaletteNum());
+							beamPalettes.get(beamPaletteUidIndexReturn(UID)).addEffect(effects.get(effectNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Effect " + i + " to Beam Palette " + beamPalettes.get(beamPaletteUidIndexReturn(UID)).getPaletteNum());
 						}
 					} else if (newNum < 0) { //If the number is negative
 						for(int i = secondNum; i <= firstNum; i++) {
-							beamPalettes[indexNum].addEffect(SearchMatch.findEffect(effects, effectCount, i));
-							Main.log.debug("OscParser added Effect " + i + " to Beam Palette " + beamPalettes[indexNum].getPaletteNum());
+							beamPalettes.get(beamPaletteUidIndexReturn(UID)).addEffect(effects.get(effectNumberIndexReturn(i)));
+							Main.log.debug("OscParser added Effect " + i + " to Beam Palette " + beamPalettes.get(beamPaletteUidIndexReturn(UID)).getPaletteNum());
 						}
 					}
 				}
 			}
-			eventBus.post(new BeamPaletteUpdateEvent(this.oscInstance, beamPalettes[indexNum], indexNum));
 		} else if(command.contains(oscmap.RETURN_CUE_INFO) && format.equals(OscFormat.ETC_EOS) && !command.contains("fx")
 				&& !command.contains("links") && !command.contains("actions")) {											//RETURN_CUE_INFO for ETC_EOS only --->PART 1<---
 			
@@ -925,7 +1280,7 @@ public class OscParser implements OSCMessageListener {
 			float cueNum = Float.parseFloat(postIndex[6]);
 			int cuelistNum = Integer.parseInt(postIndex[5]);
 			float cuePart = Float.parseFloat(postIndex[7]);
-			int cuelistIndex = SearchMatch.findCuelistIndex(cuelists, cuelistCount, cuelistNum);
+			int cuelistIndex = cuelistNumberIndexReturn(cuelistNum);
 			
 			String UID = (String) argList.get(1);
 			String name = (String) argList.get(2);
@@ -955,18 +1310,18 @@ public class OscParser implements OSCMessageListener {
 			int partCount = (Integer) argList.get(26);
 			
 			if(cuePart != 0) { //If the cue is a Part
-				Cue tempCue = new Cue(cuePart, cuelists[cuelistIndex], UID, name, upTimeDuration, upTimeDelay, downTimeDuration, downTimeDelay,
+				Cue tempCue = new Cue(cuePart, cuelists.get(cuelistIndex), UID, name, upTimeDuration, upTimeDelay, downTimeDuration, downTimeDelay,
 						focusTimeDuration, focusTimeDelay, colorTimeDuration, colorTimeDelay, beamTimeDuration, beamTimeDelay, preheat,
 						curve, rate, mark, block, assertString, link, followTime, hangTime, allFade, loop, solo, timecode);
-				int cuelistIndexNum = SearchMatch.findCueIndexFromCuelist(cuelists[cuelistIndex], cueNum);
-				int partIndexNum = cuelists[cuelistIndex].getCueFromIndex(cuelistIndexNum).addCuePartReturnIndex(tempCue); //Adds the cue and returns the indexNum all in one fell-swoop
-				eventBus.post(new CuePartUpdateEvent(this.oscInstance, cuelists[cuelistIndex].getCueFromIndex(cuelistIndexNum), cuelists[cuelistIndex], cuelistIndexNum, tempCue, partIndexNum));
+				int cuelistIndexNum = cuelists.get(cuelistIndex).cueUidIndexReturn(UID);
+				cuelists.get(cuelistIndex).getCue(cuelistIndexNum).addReplaceCuePart(tempCue); //Adds the cue and returns the indexNum all in one fell-swoop
+				eventBus.post(new CuePartUpdateEvent(this.oscInstance, cuelists.get(cuelistIndex).getCue(cuelistIndexNum), cuelists.get(cuelistIndex), tempCue));
 			}else { //If the Cue is a base cue
-				Cue tempCue = new Cue(cueNum, cuelists[cuelistIndex], UID, name, upTimeDuration, upTimeDelay, downTimeDuration, downTimeDelay,
+				Cue tempCue = new Cue(cueNum, cuelists.get(cuelistIndex), UID, name, upTimeDuration, upTimeDelay, downTimeDuration, downTimeDelay,
 						focusTimeDuration, focusTimeDelay, colorTimeDuration, colorTimeDelay, beamTimeDuration, beamTimeDelay, preheat,
 						curve, rate, mark, block, assertString, link, followTime, hangTime, allFade, loop, solo, timecode);
-				int indexNum = cuelists[cuelistIndex].addCueReturnIndex(tempCue);
-				eventBus.post(new CueUpdateEvent(this.oscInstance, tempCue, cuelists[cuelistIndex], indexNum));
+				cuelists.get(cuelistIndex).addReplaceCue(tempCue);
+				eventBus.post(new CueUpdateEvent(this.oscInstance, tempCue, cuelists.get(cuelistIndex)));
 			}
 		} else if(command.contains(oscmap.RETURN_CUE_INFO) && format.equals(OscFormat.ETC_EOS) && command.contains("fx")
 				&& !command.contains("links") && !command.contains("actions")) {											//RETURN_CUE_INFO for ETC_EOS only --->PART 2<---
@@ -976,17 +1331,17 @@ public class OscParser implements OSCMessageListener {
 			int cuelistNum = Integer.parseInt(postIndex[5]);
 			float cuePart = Float.parseFloat(postIndex[7]);
 			int varLength = Integer.parseInt(postIndex[11]);
-			int cuelistIndex = SearchMatch.findCuelistIndex(cuelists, cuelistCount, cuelistNum);
+			int cuelistIndex = cuelistNumberIndexReturn(cuelistNum);
+			int parentCueIndex = cuelists.get(cuelistIndex).cueNumberIndexReturn(cueNum);
 			
 			if(cuePart != 0) { //If it's a partCue
-				int parentCueIndex = SearchMatch.findCueIndexFromCuelist(cuelists[cuelistIndex], cueNum);
-				int cuePartIndex = SearchMatch.findCuePartIndexFromCue(cuelists[cuelistIndex].getCueFromIndex(parentCueIndex), cuePart);
+				int cuePartIndex = cuelists.get(cuelistIndex).getCue(parentCueIndex).cuePartNumberIndexReturn(cuePart);
 				
 				for(int x = 2; x < varLength; x++) {
 					String temp = argList.get(x).toString();
 					if(!temp.contains("-")) { 
-						cuelists[cuelistIndex].getCueFromIndex(parentCueIndex).getPartFromIndex(cuePartIndex).addEffect(SearchMatch.findEffect(effects, effectCount,(Integer) argList.get(x)));
-						Main.log.debug("OscParser added Effect " + (Integer) argList.get(x) + " to Cue " + cuelists[cuelistIndex].getCueFromIndex(parentCueIndex).getPartFromIndex(cuePartIndex).getCueNumber());
+						cuelists.get(cuelistIndex).getCue(parentCueIndex).getPart(cuePartIndex).addEffect(effects.get(effectNumberIndexReturn((Integer) argList.get(x))));
+						Main.log.debug("OscParser added Effect " + (Integer) argList.get(x) + " to Cue " + cueNum);
 					} else {
 						String[] fxSplit = temp.split("-");
 						int firstNum = Integer.parseInt(fxSplit[0]); //Calculate the size of the channel array and get channels from the patch list.
@@ -994,25 +1349,24 @@ public class OscParser implements OSCMessageListener {
 						int newNum = secondNum - firstNum;
 						if(newNum > 0) { //If the number is positive
 							for(int i = firstNum; i <= secondNum; i++) {
-								cuelists[cuelistIndex].getCueFromIndex(parentCueIndex).getPartFromIndex(cuePartIndex).addEffect(SearchMatch.findEffect(effects, effectCount, i));
-								Main.log.debug("OscParser added Effect " + i + " to Cue " + cuelists[cuelistIndex].getCueFromIndex(parentCueIndex).getPartFromIndex(cuePartIndex).getCueNumber());
+								cuelists.get(cuelistIndex).getCue(parentCueIndex).getPart(cuePartIndex).addEffect(effects.get(effectNumberIndexReturn(i)));;
+								Main.log.debug("OscParser added Effect " + i + " to Cue " + cueNum);
 							}
 						} else if (newNum < 0) { //If the number is negative
 							for(int i = secondNum; i <= firstNum; i++) {
-								cuelists[cuelistIndex].getCueFromIndex(parentCueIndex).getPartFromIndex(cuePartIndex).addEffect(SearchMatch.findEffect(effects, effectCount, i));
-								Main.log.debug("OscParser added Effect " + i + " to Cue " + cuelists[cuelistIndex].getCueFromIndex(parentCueIndex).getPartFromIndex(cuePartIndex).getCueNumber());
+								cuelists.get(cuelistIndex).getCue(parentCueIndex).getPart(cuePartIndex).addEffect(effects.get(effectNumberIndexReturn(i)));
+								Main.log.debug("OscParser added Effect " + i + " to Cue " + cueNum);
 							}
 						}
 					}
 				}
 			}else { //If it's a baseCue only
-				int parentCueIndex = SearchMatch.findCueIndexFromCuelist(cuelists[cuelistIndex], cueNum);
 				
 				for(int x = 2; x < varLength; x++) {
 					String temp = argList.get(x).toString();
 					if(!temp.contains("-")) { 
-						cuelists[cuelistIndex].getCueFromIndex(parentCueIndex).addEffect(SearchMatch.findEffect(effects, effectCount, Float.parseFloat(argList.get(x).toString())));
-						Main.log.debug("OscParser added Effect " + Float.parseFloat(argList.get(x).toString()) + " to Cue " + cuelists[cuelistIndex].getCueFromIndex(parentCueIndex).getCueNumber());
+						cuelists.get(cuelistIndex).getCue(parentCueIndex).addEffect(effects.get(effectNumberIndexReturn(Float.parseFloat(argList.get(x).toString()))));
+						Main.log.debug("OscParser added Effect " + Float.parseFloat(argList.get(x).toString()) + " to Cue " + cueNum);
 					} else {
 						String[] fxSplit = temp.split("-");
 						int firstNum = Integer.parseInt(fxSplit[0]); //Calculate the size of the channel array and get channels from the patch list.
@@ -1020,13 +1374,14 @@ public class OscParser implements OSCMessageListener {
 						int newNum = secondNum - firstNum;
 						if(newNum > 0) { //If the number is positive
 							for(int i = firstNum; i <= secondNum; i++) {
-								cuelists[cuelistIndex].getCueFromIndex(parentCueIndex).addEffect(SearchMatch.findEffect(effects, effectCount, i));
-								Main.log.debug("OscParser added Effect " + i + " to Cue " + cuelists[cuelistIndex].getCueFromIndex(parentCueIndex).getCueNumber());
+								System.out.println(effects.size());
+								cuelists.get(cuelistIndex).getCue(parentCueIndex).addEffect(effects.get(effectNumberIndexReturn(i)));
+								Main.log.debug("OscParser added Effect " + i + " to Cue " + cueNum);
 							}
 						} else if (newNum < 0) { //If the number is negative
 							for(int i = secondNum; i <= firstNum; i++) {
-								cuelists[cuelistIndex].getCueFromIndex(parentCueIndex).addEffect(SearchMatch.findEffect(effects, effectCount, i));
-								Main.log.debug("OscParser added Effect " + i + " to Cue " + cuelists[cuelistIndex].getCueFromIndex(parentCueIndex).getCueNumber());
+								cuelists.get(cuelistIndex).getCue(parentCueIndex).addEffect(effects.get(effectNumberIndexReturn(i)));
+								Main.log.debug("OscParser added Effect " + i + " to Cue " + cueNum);
 							}
 						}
 					}
@@ -1036,7 +1391,8 @@ public class OscParser implements OSCMessageListener {
 		} else if(command.contains(oscmap.RETURN_ACTIVE_CHAN) && format.equals(OscFormat.ETC_EOS)) {						//ACTIVE CHANNEL PROCESSING FOR ETC_EOS ONLY
 			String[] postIndex = ((String)argList.get(0)).split(" "); //Split via the break, giving us the active channel numbers only.
 			if(postIndex[0].contains(",")) {
-				this.activeChannelCount = 0; //Set to 0- we'll add to this throughout this section
+				//this.activeChannelCount = 0; //Set to 0- we'll add to this throughout this section
+				activeChannels.clear();
 				this.singleChannelSelected = false;
 				String[] commaSplit = postIndex[0].split(","); //Split in-case of commas
 				for(int x = 0; x < commaSplit.length; x++) {
@@ -1047,21 +1403,20 @@ public class OscParser implements OSCMessageListener {
 						int newNum = secondNum - firstNum;
 						if(newNum > 0 ) { //If the number is positive
 							for(int i = firstNum; i <= secondNum; i++) {
-								activeChannels[x] = SearchMatch.findChannel(channels, channelCount, i);
-								activeChannelCount++;
-								eventBus.post(new ChannelSelectionEvent(this.oscInstance, activeChannels[x], x, this.singleChannelSelected));
+								activeChannels.add(channels.get(channelNumberIndexReturn(i)));
+								eventBus.post(new ChannelSelectionEvent(this.oscInstance, activeChannels.get(x), x, this.singleChannelSelected));
 							}
 						} else if (newNum < 0) { //If the number is negative
 							for(int i = secondNum; i <= firstNum; i++) {
-								activeChannels[x] = SearchMatch.findChannel(channels, channelCount, i);
-								activeChannelCount++;
-								eventBus.post(new ChannelSelectionEvent(this.oscInstance, activeChannels[x], x, this.singleChannelSelected));
+								activeChannels.add(channels.get(channelNumberIndexReturn(i)));
+								eventBus.post(new ChannelSelectionEvent(this.oscInstance, activeChannels.get(x), x, this.singleChannelSelected));
 							}
 						}
 					}
 				}
 			}else if(postIndex[0].contains("-")) {
-				this.activeChannelCount = 0; //Set to 0- we'll add to this throughout this section
+				//this.activeChannelCount = 0; //Set to 0- we'll add to this throughout this section
+				activeChannels.clear();
 				this.singleChannelSelected = false;
 				String[] chanSplit = postIndex[0].split("-");
 				int firstNum = Integer.parseInt(chanSplit[0]);
@@ -1069,37 +1424,31 @@ public class OscParser implements OSCMessageListener {
 				int newNum = secondNum - firstNum;
 				if(newNum > 0 ) { //If the number is positive
 					for(int i = firstNum; i <= secondNum; i++) {
-						activeChannels[activeChannelCount] = SearchMatch.findChannel(channels, channelCount, i);
-						eventBus.post(new ChannelSelectionEvent(this.oscInstance, activeChannels[activeChannelCount], activeChannelCount, this.singleChannelSelected));
-						activeChannelCount++;
+						activeChannels.add(channels.get(channelNumberIndexReturn(i)));
+						eventBus.post(new ChannelSelectionEvent(this.oscInstance, activeChannels.get(activeChannels.size()-1), activeChannels.size(), this.singleChannelSelected));
 					}
 				} else if (newNum < 0) { //If the number is negative
 					for(int i = secondNum; i <= firstNum; i++) {
-						activeChannels[activeChannelCount] = SearchMatch.findChannel(channels, channelCount, i);
-						eventBus.post(new ChannelSelectionEvent(this.oscInstance, activeChannels[activeChannelCount], activeChannelCount, this.singleChannelSelected));
-						activeChannelCount++;
+						activeChannels.add(channels.get(channelNumberIndexReturn(i)));
+						eventBus.post(new ChannelSelectionEvent(this.oscInstance, activeChannels.get(activeChannels.size()-1), activeChannels.size(), this.singleChannelSelected));
 					}
 				}
 			} else if(postIndex[0].isBlank()) { //No channels selected
-				activeChannelCount = 0;
+				activeChannels.clear();
 				singleChannelSelected = false;
 			} else {
+				activeChannels.clear();
 				int activeChannelNum = Integer.parseInt(postIndex[0]);
-				activeChannels[0] = SearchMatch.findChannel(channels, channelCount, activeChannelNum);
-				activeChannelCount = 1;
+				activeChannels.add(channels.get(channelNumberIndexReturn(activeChannelNum)));
 				singleChannelSelected = true;
 				try {
-					eventBus.post(new ChannelSelectionEvent(this.oscInstance, activeChannels[0], activeChannelCount, this.singleChannelSelected));
+					eventBus.post(new ChannelSelectionEvent(this.oscInstance, activeChannels.get(0), activeChannels.size(), this.singleChannelSelected));
 				}catch(NullPointerException e) {
 					Main.log.error("OscParser ERROR: Tried to select a non-patched channel! CHANNEL NUM: " + activeChannelNum);
 				}
 			}
 			
 		}
-		
-		//For debug
-		System.out.println(message.getAddress());
-		System.out.println(message.getArguments());
 	}
 	
 	/*
@@ -1125,8 +1474,6 @@ public class OscParser implements OSCMessageListener {
 		this.focusPaletteCount = 0;
 		this.colorPaletteCount = 0;
 		this.beamPaletteCount = 0;
-		
-		this.activeChannelCount = 0;
 		
 		this.singleChannelSelected = false;
 		

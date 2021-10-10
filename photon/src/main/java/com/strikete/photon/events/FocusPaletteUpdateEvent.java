@@ -10,14 +10,10 @@ public class FocusPaletteUpdateEvent extends GenericUpdateEvent {
 	 * VARIABLES
 	 */
 	private FocusPalette fp;
-	private int indexNum;
 	
 	/*
 	 * METHODS
 	 */
-	public int getIndexNum() {
-		return this.indexNum;
-	}
 	public FocusPalette getFocusPalette() {
 		return this.fp;
 	}
@@ -25,10 +21,9 @@ public class FocusPaletteUpdateEvent extends GenericUpdateEvent {
 	/*
 	 * CONSTRUCTOR
 	 */
-	public FocusPaletteUpdateEvent(OscInstance oscInstanceIn, FocusPalette fpIn, int indexNumIn) {
+	public FocusPaletteUpdateEvent(OscInstance oscInstanceIn, FocusPalette fpIn) {
 		super(oscInstanceIn);
 		this.fp = fpIn;
-		this.indexNum = indexNumIn;
 		Main.log.debug("EVENT TRIGGERED: FocusPaletteUpdateEvent with Focus Palette " + fpIn.getPaletteNum() + " at " + this.getTime());
 	}
 }

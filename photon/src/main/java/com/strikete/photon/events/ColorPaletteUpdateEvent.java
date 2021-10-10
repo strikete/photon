@@ -10,14 +10,10 @@ public class ColorPaletteUpdateEvent extends GenericUpdateEvent {
 	 * VARIABLES
 	 */
 	private ColorPalette cp;
-	private int indexNum;
 	
 	/*
 	 * METHODS
 	 */
-	public int getIndexNum() {
-		return this.indexNum;
-	}
 	public ColorPalette getColorPalette() {
 		return this.cp;
 	}
@@ -25,10 +21,9 @@ public class ColorPaletteUpdateEvent extends GenericUpdateEvent {
 	/*
 	 * CONSTRUCTOR
 	 */
-	public ColorPaletteUpdateEvent(OscInstance oscInstanceIn, ColorPalette cpIn, int indexNumIn) {
+	public ColorPaletteUpdateEvent(OscInstance oscInstanceIn, ColorPalette cpIn) {
 		super(oscInstanceIn);
 		this.cp = cpIn;
-		this.indexNum = indexNumIn;
 		Main.log.debug("EVENT TRIGGERED: ColorPaletteUpdateEvent with Color Palette " + cpIn.getPaletteNum() + " at " + this.getTime());
 	}
 }

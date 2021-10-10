@@ -10,7 +10,6 @@ public class CuelistUpdateEvent extends GenericUpdateEvent {
 	 * VARIABLES
 	 */
 	private Cuelist cuelist;
-	private int indexNum;
 	
 	/*
 	 * METHODS
@@ -18,17 +17,13 @@ public class CuelistUpdateEvent extends GenericUpdateEvent {
 	public Cuelist getCuelist() {
 		return this.cuelist;
 	}
-	public int getIndexNumber() {
-		return this.indexNum;
-	}
 	
 	/*
 	 * CONSTRUCTOR
 	 */
-	public CuelistUpdateEvent(OscInstance oscInstanceIn, Cuelist cuelistIn, int indexNumIn) {
+	public CuelistUpdateEvent(OscInstance oscInstanceIn, Cuelist cuelistIn) {
 		super(oscInstanceIn);
 		this.cuelist = cuelistIn;
-		this.indexNum = indexNumIn;
 		Main.log.debug("EVENT TRIGGERED: CuelistUpdateEvent at " + this.getTime());
 	}
 

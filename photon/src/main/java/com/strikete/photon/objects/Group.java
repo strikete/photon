@@ -1,13 +1,14 @@
 package com.strikete.photon.objects;
 
+import java.util.ArrayList;
+
 public class Group {
 
 	/*
 	 * VARIABLES
 	 */
 	private String UID;
-	private Channel[] channels = new Channel[5120];
-    private int numOfChannels;
+	private ArrayList<Channel> channels = new ArrayList<Channel>();
 	private String name;
 	private float groupNum;
 	
@@ -17,14 +18,24 @@ public class Group {
 	public String getUID() {
 		return this.UID;
 	}
-	public Channel[] getChannels() {
-		return this.channels;
+	public ArrayList<Channel> getChannels(){
+		return channels;
+	}
+	public ArrayList<Integer> getChannelsAsInt(){
+		ArrayList<Integer> channelsAsInt = new ArrayList<Integer>();
+		for(int x = 0; x < channels.size(); x++) {
+			channelsAsInt.add(channels.get(x).getChannelNum());
+		}
+		return channelsAsInt;
+	}
+	public Channel getChannel(int index) {
+		return channels.get(index);
 	}
 	public String getName() {
 		return this.name;
 	}
-	public int getNumOfChannels() {
-		return(this.numOfChannels + 1);
+	public int getChannelSize() {
+		return channels.size();
 	}
 	public float getGroupNum() {
 		return this.groupNum;
@@ -32,8 +43,7 @@ public class Group {
 	
 	
 	public void addChannel(Channel channelIn) { //As of right now if you need to modify channels you'll just need to create a new group object.
-		this.channels[this.numOfChannels] = channelIn;
-		this.numOfChannels++;
+		channels.add(channelIn);
 	}
 	
 	/*
@@ -43,6 +53,5 @@ public class Group {
 		this.UID = UIDin;
 		this.name = nameIn;
 		this.groupNum = groupNumIn;
-		this.numOfChannels = 0;
 	}
 }

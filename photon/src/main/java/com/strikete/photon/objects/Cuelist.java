@@ -1,5 +1,11 @@
 package com.strikete.photon.objects;
 
+import java.util.ArrayList;
+
+import com.strikete.photon.Main;
+import com.strikete.photon.events.CuelistUpdateEvent;
+import com.strikete.photon.events.IntensityPaletteUpdateEvent;
+
 public class Cuelist {
 
 	/*
@@ -19,7 +25,7 @@ public class Cuelist {
 	private int timecodeList;
 	private boolean OOSsync;
 	
-	private Cue[] cues = new Cue[65535];
+	private ArrayList<Cue> cues = new ArrayList<Cue>();
 	private int cueCount;
 	
 	/*
@@ -67,24 +73,64 @@ public class Cuelist {
 	public int getCueCount() {
 		return this.cueCount;
 	}
-	public Cue[] getCues() {
-		return this.cues;
+	public int getCueSize() {
+		return cues.size();
 	}
-	public Cue getCueFromIndex(int indexNum) {
-		return this.cues[indexNum];
+	public Cue getCue(int index) {
+		return cues.get(index);
 	}
 	public void addCue(Cue cueIn) {
-		this.cues[cueCount] = cueIn;
-		cueCount++;
+		cues.add(cueIn);
 	}
 	public int addCueReturnIndex(Cue cueIn) {
-		int tempIndex = cueCount;
-		this.cues[cueCount] = cueIn;
-		cueCount++;
-		return(tempIndex);
+		cues.add(cueIn);
+		return(cues.size()-1);
 	}
 	public void modifyCue(Cue cueIn, int indexNum) {
-		this.cues[indexNum] = cueIn;
+		cues.set(indexNum, cueIn);
+	}
+	
+	public int cueNumberIndexReturn(float number) {
+		for(int x = 0; x < cues.size(); x++) {
+			if(cues.get(x).getCueNumber() == number) {
+				return x;
+			}
+		}
+		Main.log.error("CUELIST OBJ: Could not find Cue with Number: " + number + ", RETURNING ZERO!");
+		return 0;
+	}
+	
+	public int cueUidIndexReturn(String UID) {
+		for(int x = 0; x < cues.size(); x++) {
+			if(cues.get(x).getUID().equals(UID)) {
+				return x;
+			}
+		}
+		Main.log.error("CUELIST OBJ: Could not find Cue with UID: " + UID + ", RETURNING ZERO!");
+		return 0;
+	}
+	
+	public void addReplaceCue(final Cue cueIn) {
+		boolean matchFlag = false;
+		for(int x = 0; x < cues.size(); x++) {
+			if(cues.get(x).getUID().equals(cueIn.getUID())) {
+				matchFlag = true;
+				cues.set(x, cueIn);
+			}
+		}
+		if(!matchFlag) {
+			cues.add(cueIn);
+		}
+	}
+	public int addReplaceCueReturnIndex(final Cue cueIn) {
+		for(int x = 0; x < cues.size(); x++) {
+			if(cues.get(x).getUID().equals(cueIn.getUID())) {
+				cues.set(x, cueIn);
+				return x;
+			}
+		}
+		cues.add(cueIn);
+		return (cues.size()-1);
 	}
 	
 	/*

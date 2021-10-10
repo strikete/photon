@@ -10,14 +10,10 @@ public class SubUpdateEvent extends GenericUpdateEvent {
 	 * VARIABLES
 	 */
 	private Sub sub;
-	private int indexNum;
 	
 	/*
 	 * METHODS
 	 */
-	public int getIndexNum() {
-		return this.indexNum;
-	}
 	public Sub getSub() {
 		return this.sub;
 	}
@@ -25,10 +21,9 @@ public class SubUpdateEvent extends GenericUpdateEvent {
 	/*
 	 * CONSTRUCTOR
 	 */
-	public SubUpdateEvent(OscInstance oscInstanceIn, Sub subIn, int indexNumIn) {
+	public SubUpdateEvent(OscInstance oscInstanceIn, Sub subIn) {
 		super(oscInstanceIn);
 		this.sub = subIn;
-		this.indexNum = indexNumIn;
 		Main.log.debug("EVENT TRIGGERED: SubUpdateEvent with Submaster " + subIn.getSubNum() + " at " + this.getTime());
 	}
 }

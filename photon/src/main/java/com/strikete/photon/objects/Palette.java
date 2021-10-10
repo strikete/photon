@@ -1,5 +1,7 @@
 package com.strikete.photon.objects;
 
+import java.util.ArrayList;
+
 public class Palette {
 
 	/*
@@ -10,10 +12,8 @@ public class Palette {
 	private String name;
 	private boolean absolute;
 	private boolean locked;
-	private Channel[] channels = new Channel[65535];
-	private int numOfChannels;
-	private Effect[] effects = new Effect[65535];
-	private int numOfEffects;
+	private ArrayList<Channel> channels = new ArrayList<Channel>();
+	private ArrayList<Effect> effects = new ArrayList<Effect>();
 	
 	/*
 	 * METHODS
@@ -35,22 +35,19 @@ public class Palette {
 		return this.locked;
 	}
 	public Channel getChannel(int indexNum) {
-		return this.channels[indexNum];
+		return channels.get(indexNum);
 	}
-	public int getNumOfChannels() {
-		return this.numOfChannels;
+	public int getChannelCount() {
+		return channels.size();
 	}
-	public int getNumOfEffects() {
-		return this.numOfEffects;
+	public int getEffectCount() {
+		return effects.size();
 	}
-	
 	public void addChannel(Channel channelIn) {
-		channels[numOfChannels] = channelIn;
-		numOfChannels++;
+		channels.add(channelIn);
 	}
 	public void addEffect(Effect effectIn) {
-		effects[numOfEffects] = effectIn;
-		numOfEffects++;
+		effects.add(effectIn);
 	}
 	
 	/*
@@ -62,7 +59,5 @@ public class Palette {
 		this.name = nameIn;
 		this.absolute = absoluteIn;
 		this.locked = lockedIn;
-		this.numOfChannels = 0;
-		this.numOfEffects = 0;
 	}
 }

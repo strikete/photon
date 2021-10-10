@@ -1,5 +1,9 @@
 package com.strikete.photon.objects;
 
+import java.util.ArrayList;
+
+import com.strikete.photon.Main;
+
 public class Cue {
 
 	/*
@@ -31,27 +35,20 @@ public class Cue {
 	private int loop;
 	private boolean solo;
 	private String timecode;
-	private int partCount;
 	
-	private Cue[] cueParts = new Cue[65535];
+	//private Cue[] cueParts = new Cue[65535];
+	private ArrayList<Cue> cueParts = new ArrayList<Cue>();
 	
 	private Cuelist parentCuelist;
 	
-	private Channel[] channels = new Channel[65535];
-	private Effect[] effects = new Effect[65535];
-	private Preset[] presets = new Preset[65535];
-	private IntensityPalette[] intensityPalettes = new IntensityPalette[65535];
-	private FocusPalette[] focusPalettes = new FocusPalette[65535];
-	private ColorPalette[] colorPalettes = new ColorPalette[65535];
-	private BeamPalette[] beamPalettes = new BeamPalette[65535];
+	private ArrayList<Channel> channels = new ArrayList<Channel>();
+	private ArrayList<Effect> effects = new ArrayList<Effect>();
+	private ArrayList<Preset> presets = new ArrayList<Preset>();
+	private ArrayList<IntensityPalette> intensityPalettes = new ArrayList<IntensityPalette>();
+	private ArrayList<FocusPalette> focusPalettes = new ArrayList<FocusPalette>();
+	private ArrayList<ColorPalette> colorPalettes = new ArrayList<ColorPalette>();
+	private ArrayList<BeamPalette> beamPalettes = new ArrayList<BeamPalette>();
 	
-	private int channelCount;
-	private int effectCount;
-	private int presetCount;
-	private int ipCount;
-	private int fpCount;
-	private int cpCount;
-	private int bpCount;
 	
 	/*
 	 * METHODS - RELATING TO PARENT CUELIST
@@ -67,97 +64,69 @@ public class Cue {
 	 * METHODS - ADDING ATTACHED OBJECTS
 	 */
 	public void addChannel(Channel channelIn) {
-		channels[channelCount] = channelIn;
-		channelCount++;
-	}
-	public void modifyChannel(Channel channelIn, int indexNum) {
-		channels[indexNum] = channelIn;
+		channels.add(channelIn);
 	}
 	public void addEffect(Effect effectIn) {
-		effects[effectCount] = effectIn;
-		effectCount++;
-	}
-	public void modifyEffect(Effect effectIn, int indexNum) {
-		effects[indexNum] = effectIn;
+		effects.add(effectIn);
 	}
 	public void addPreset(Preset presetIn) {
-		presets[presetCount] = presetIn;
-		presetCount++;
-	}
-	public void modifyPreset(Preset presetIn, int indexNum) {
-		presets[indexNum] = presetIn;
+		presets.add(presetIn);
 	}
 	public void addIntensityPalette(IntensityPalette ipIn) {
-		intensityPalettes[ipCount] = ipIn;
-		ipCount++;
-	}
-	public void modifyIntensityPalette(IntensityPalette ipIn, int indexNum) {
-		intensityPalettes[indexNum] = ipIn;
+		intensityPalettes.add(ipIn);
 	}
 	public void addFocusPalette(FocusPalette fpIn) {
-		focusPalettes[fpCount] = fpIn;
-		fpCount++;
-	}
-	public void modifyFocusPalette(FocusPalette fpIn, int indexNum) {
-		focusPalettes[indexNum] = fpIn;
+		focusPalettes.add(fpIn);
 	}
 	public void addColorPalette(ColorPalette cpIn) {
-		colorPalettes[cpCount] = cpIn;
-		cpCount++;
-	}
-	public void modifyColorPalette(ColorPalette cpIn, int indexNum) {
-		colorPalettes[indexNum] = cpIn;
+		colorPalettes.add(cpIn);
 	}
 	public void addBeamPalette(BeamPalette bpIn) {
-		beamPalettes[bpCount] = bpIn;
-		bpCount++;
-	}
-	public void modifyBeamPalette(BeamPalette bpIn, int indexNum) {
-		beamPalettes[indexNum] = bpIn;
+		beamPalettes.add(bpIn);
 	}
 	
 	/*
 	 * METHODS - ATTACHED OBJECT GETTERS
 	 */
-	public Channel[] getChannels() {
-		return this.channels;
+	public Channel getChannel(int index) {
+		return channels.get(index);
 	}
-	public Preset[] getPresets() {
-		return this.presets;
+	public Preset getPreset(int index) {
+		return presets.get(index);
 	}
-	public IntensityPalette[] getIntensityPalettes() {
-		return this.intensityPalettes;
+	public IntensityPalette getIntensityPalette(int index) {
+		return intensityPalettes.get(index);
 	}
-	public FocusPalette[] getFocusPalettes() {
-		return this.focusPalettes;
+	public FocusPalette getFocusPalette(int index) {
+		return focusPalettes.get(index);
 	}
-	public ColorPalette[] getColorPalettes() {
-		return this.colorPalettes;
+	public ColorPalette getColorPalette(int index) {
+		return colorPalettes.get(index);
 	}
-	public BeamPalette[] getBeamPalettes() {
-		return this.beamPalettes;
+	public BeamPalette getBeamPalette(int index) {
+		return beamPalettes.get(index);
 	}
 	
 	/*
 	 * METHODS - ATTACHED OBJECT COUNT GETTERS
 	 */
-	public int getChannelCount() {
-		return this.channelCount;
+	public int getChannelSize() {
+		return channels.size();
 	}
-	public int getPresetCount() {
-		return this.presetCount;
+	public int getPresetSize() {
+		return presets.size();
 	}
-	public int getIntensityPaletteCount() {
-		return this.ipCount;
+	public int getIntensityPaletteSize() {
+		return intensityPalettes.size();
 	}
-	public int getFocusPaletteCount() {
-		return this.fpCount;
+	public int getFocusPaletteSize() {
+		return focusPalettes.size();
 	}
-	public int getColorPaletteCount() {
-		return this.cpCount;
+	public int getColorPaletteSize() {
+		return colorPalettes.size();
 	}
-	public int getBeamPaletteCount() {
-		return this.bpCount;
+	public int getBeamPaletteSize() {
+		return beamPalettes.size();
 	}
 	
 	/*
@@ -242,30 +211,55 @@ public class Cue {
 		return this.timecode;
 	}
 	public int getPartCount() {
-		return this.partCount;
+		return cueParts.size();
 	}
 	
 	/*
 	 * METHODS RELATING TO CUE PARTS
 	 */
-	public void addCuePart(Cue cueIn) {
-		cueParts[partCount] = cueIn;
-		partCount++;
+	public void addReplaceCuePart(final Cue cueIn) {
+		boolean matchFlag = false;
+		for(int x = 0; x < cueParts.size(); x++) {
+			if(cueParts.get(x).getUID().equals(cueIn.getUID())) {
+				matchFlag = true;
+				cueParts.set(x, cueIn);
+			}
+		}
+		if(!matchFlag) {
+			cueParts.add(cueIn);
+		}
 	}
-	public int addCuePartReturnIndex(Cue cueIn) {
-		int tempIndex = partCount;
-		cueParts[partCount] = cueIn;
-		partCount++;
-		return tempIndex;
+	public int addReplaceCuePartReturnIndex(final Cue cueIn) {
+		for(int x = 0; x < cueParts.size(); x++) {
+			if(cueParts.get(x).getUID().equals(cueIn.getUID())) {
+				cueParts.set(x, cueIn);
+				return x;
+			}
+		}
+		cueParts.add(cueIn);
+		return (cueParts.size()-1);
 	}
-	public void modifyCuePart(Cue cueIn, int indexNum) {
-		cueParts[indexNum] = cueIn;
+	public int cuePartNumberIndexReturn(float number) {
+		for(int x = 0; x < cueParts.size(); x++) {
+			if(cueParts.get(x).getCueNumber() == number) {
+				return x;
+			}
+		}
+		Main.log.error("CUE OBJ: Could not find Cue with Number: " + number + ", RETURNING ZERO!");
+		return 0;
 	}
-	public Cue[] getCueParts() {
-		return cueParts;
+	
+	public int cuePartUidIndexReturn(String UID) {
+		for(int x = 0; x < cueParts.size(); x++) {
+			if(cueParts.get(x).getUID().equals(UID)) {
+				return x;
+			}
+		}
+		Main.log.error("CUE OBJ: Could not find Cue with UID: " + UID + ", RETURNING ZERO!");
+		return 0;
 	}
-	public Cue getPartFromIndex(int indexNum) {
-		return cueParts[indexNum];
+	public Cue getPart(int index) {
+		return cueParts.get(index);
 	}
 	
 	/*
@@ -302,16 +296,7 @@ public class Cue {
 		this.loop = loopIn;
 		this.solo = soloIn;
 		this.timecode = timecodeIn;
-		this.partCount = 0;
 		
 		this.parentCuelist = parentCuelistIn;
-
-		this.channelCount = 0;
-		this.effectCount = 0;
-		this.presetCount = 0;
-		this.ipCount = 0;
-		this.fpCount = 0;
-		this.cpCount = 0;
-		this.bpCount = 0;
 	}
 }

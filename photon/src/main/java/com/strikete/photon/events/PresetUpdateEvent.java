@@ -10,14 +10,10 @@ public class PresetUpdateEvent extends GenericUpdateEvent {
 	 * VARIABLES
 	 */
 	private Preset preset;
-	private int indexNum;
 	
 	/*
 	 * METHODS
 	 */
-	public int getIndexNum() {
-		return this.indexNum;
-	}
 	public Preset getPreset() {
 		return this.preset;
 	}
@@ -25,10 +21,9 @@ public class PresetUpdateEvent extends GenericUpdateEvent {
 	/*
 	 * CONSTRUCTOR
 	 */
-	public PresetUpdateEvent(OscInstance oscInstanceIn, Preset presetIn, int indexNumIn) {
+	public PresetUpdateEvent(OscInstance oscInstanceIn, Preset presetIn) {
 		super(oscInstanceIn);
 		this.preset = presetIn;
-		this.indexNum = indexNumIn;
 		Main.log.debug("EVENT TRIGGERED: PresetUpdateEvent with Preset " + presetIn.getPresetNum() + " at " + this.getTime());
 	}
 }

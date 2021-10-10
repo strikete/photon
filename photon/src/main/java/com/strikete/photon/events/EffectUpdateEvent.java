@@ -10,14 +10,10 @@ public class EffectUpdateEvent extends GenericUpdateEvent {
 	 * VARIABLES
 	 */
 	private Effect fx;
-	private int indexNum;
 	
 	/*
 	 * METHODS
 	 */
-	public int getIndexNum() {
-		return this.indexNum;
-	}
 	public Effect getEffect() {
 		return this.fx;
 	}
@@ -25,10 +21,9 @@ public class EffectUpdateEvent extends GenericUpdateEvent {
 	/*
 	 * CONSTRUCTOR
 	 */
-	public EffectUpdateEvent(OscInstance oscInstanceIn, Effect effectIn, int indexNumIn) {
+	public EffectUpdateEvent(OscInstance oscInstanceIn, Effect effectIn) {
 		super(oscInstanceIn);
 		this.fx = effectIn;
-		this.indexNum = indexNumIn;
 		Main.log.debug("EVENT TRIGGERED: EffectUpdateEvent with Effect " + effectIn.getEffectNum() + " at " + this.getTime());
 	}
 }

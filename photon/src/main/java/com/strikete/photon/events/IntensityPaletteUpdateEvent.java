@@ -10,14 +10,10 @@ public class IntensityPaletteUpdateEvent extends GenericUpdateEvent {
 	 * VARIABLES
 	 */
 	private IntensityPalette ip;
-	private int indexNum;
 	
 	/*
 	 * METHODS
 	 */
-	public int getIndexNum() {
-		return this.indexNum;
-	}
 	public IntensityPalette getIntensityPalette() {
 		return this.ip;
 	}
@@ -25,10 +21,9 @@ public class IntensityPaletteUpdateEvent extends GenericUpdateEvent {
 	/*
 	 * CONSTRUCTOR
 	 */
-	public IntensityPaletteUpdateEvent(OscInstance oscInstanceIn, IntensityPalette ipIn, int indexNumIn) {
+	public IntensityPaletteUpdateEvent(OscInstance oscInstanceIn, IntensityPalette ipIn) {
 		super(oscInstanceIn);
 		this.ip = ipIn;
-		this.indexNum = indexNumIn;
 		Main.log.debug("EVENT TRIGGERED: IntensityPaletteUpdateEvent with Intensity Palette " + ipIn.getPaletteNum() + " at " + this.getTime());
 	}
 }

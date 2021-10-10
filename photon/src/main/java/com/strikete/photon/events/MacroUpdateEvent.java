@@ -10,15 +10,11 @@ public class MacroUpdateEvent extends GenericUpdateEvent {
 	 * VARIABLES
 	 */
 	private Macro macro;
-	private int indexNum;
 	
 	
 	/*
 	 * METHODS
 	 */
-	public int getIndexNum() {
-		return this.indexNum;
-	}
 	public Macro getMacro() {
 		return this.macro;
 	}
@@ -26,10 +22,9 @@ public class MacroUpdateEvent extends GenericUpdateEvent {
 	/*
 	 * CONSTRUCTOR
 	 */
-	public MacroUpdateEvent(OscInstance oscInstanceIn, Macro macroIn, int indexNumIn) {
+	public MacroUpdateEvent(OscInstance oscInstanceIn, Macro macroIn) {
 		super(oscInstanceIn);
 		this.macro = macroIn;
-		this.indexNum = indexNumIn;
 		Main.log.debug("EVENT TRIGGERED: MacroUpdateEvent with Macro " + macroIn.getMacroNum() + " at " + this.getTime());
 	}
 }
