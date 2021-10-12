@@ -2,158 +2,124 @@ package com.strikete.photon.objects;
 
 import java.util.ArrayList;
 
-import com.strikete.photon.Main;
-import com.strikete.photon.events.CuelistUpdateEvent;
-import com.strikete.photon.events.IntensityPaletteUpdateEvent;
-
 public class Cuelist {
 
 	/*
 	 * VARIABLES
 	 */
 	private int cuelistNum;
-	private String UID;
-	private String name;
+	private int index;
+	private String uid;
+	private String label;
 	private String playbackMode;
 	private String faderMode;
-	private boolean faderModeIndependence;
-	private boolean HTP;
+	private boolean independent;
+	private boolean htp;
 	private boolean assertBool;
-	private boolean block;
+	private boolean blockBool;
 	private boolean background;
 	private boolean soloMode;
 	private int timecodeList;
-	private boolean OOSsync;
+	private boolean oosSync;
+	private ArrayList<Integer> linkedCueLists = new ArrayList<Integer>();
 	
-	private ArrayList<Cue> cues = new ArrayList<Cue>();
-	private int cueCount;
 	
 	/*
-	 * METHODS
+	 * METHODS - GETTERS
 	 */
 	public int getCuelistNumber() {
-		return this.cuelistNum;
+		return cuelistNum;
 	}
-	public String getUID() {
-		return this.UID;
+	public int getIndex() {
+		return index;
 	}
-	public String getName() {
-		return this.name;
+	public String getUid() {
+		return uid;
+	}
+	public String getLabel() {
+		return label;
 	}
 	public String getPlaybackMode() {
-		return this.playbackMode;
+		return playbackMode;
 	}
 	public String getFaderMode() {
-		return this.faderMode;
+		return faderMode;
 	}
-	public boolean getFaderModeIndependence() {
-		return this.faderModeIndependence;
+	public boolean getIndependent() {
+		return independent;
 	}
-	public boolean getHTP() {
-		return this.HTP;
+	public boolean getHtp() {
+		return htp;
 	}
 	public boolean getAssert() {
-		return this.assertBool;
+		return assertBool;
 	}
 	public boolean getBlock() {
-		return this.block;
+		return blockBool;
 	}
 	public boolean getBackground() {
-		return this.background;
+		return background;
 	}
 	public boolean getSoloMode() {
-		return this.soloMode;
+		return soloMode;
 	}
-	public int getTimecodeList(){
-		return this.timecodeList;
+	public int getTimecodeList() {
+		return timecodeList;
 	}
-	public boolean getOOSsync() {
-		return this.OOSsync;
+	public boolean getOosSync() {
+		return oosSync;
 	}
-	public int getCueCount() {
-		return this.cueCount;
-	}
-	public int getCueSize() {
-		return cues.size();
-	}
-	public Cue getCue(int index) {
-		return cues.get(index);
-	}
-	public void addCue(Cue cueIn) {
-		cues.add(cueIn);
-	}
-	public int addCueReturnIndex(Cue cueIn) {
-		cues.add(cueIn);
-		return(cues.size()-1);
-	}
-	public void modifyCue(Cue cueIn, int indexNum) {
-		cues.set(indexNum, cueIn);
+	public ArrayList<Integer> getLinkedCuelists(){
+		return linkedCueLists;
 	}
 	
-	public int cueNumberIndexReturn(float number) {
-		for(int x = 0; x < cues.size(); x++) {
-			if(cues.get(x).getCueNumber() == number) {
-				return x;
-			}
-		}
-		Main.log.error("CUELIST OBJ: Could not find Cue with Number: " + number + ", RETURNING ZERO!");
-		return 0;
-	}
 	
-	public int cueUidIndexReturn(String UID) {
-		for(int x = 0; x < cues.size(); x++) {
-			if(cues.get(x).getUID().equals(UID)) {
-				return x;
-			}
-		}
-		Main.log.error("CUELIST OBJ: Could not find Cue with UID: " + UID + ", RETURNING ZERO!");
-		return 0;
+	/*
+	 * METHODS - SETTERS
+	 */
+	public void setLabel(String labelIn) {
+		this.label = labelIn;
 	}
-	
-	public void addReplaceCue(final Cue cueIn) {
-		boolean matchFlag = false;
-		for(int x = 0; x < cues.size(); x++) {
-			if(cues.get(x).getUID().equals(cueIn.getUID())) {
-				matchFlag = true;
-				cues.set(x, cueIn);
-			}
-		}
-		if(!matchFlag) {
-			cues.add(cueIn);
-		}
+	public void setPlaybackMode(String playbackModeIn) {
+		this.playbackMode = playbackModeIn;
 	}
-	public int addReplaceCueReturnIndex(final Cue cueIn) {
-		for(int x = 0; x < cues.size(); x++) {
-			if(cues.get(x).getUID().equals(cueIn.getUID())) {
-				cues.set(x, cueIn);
-				return x;
-			}
-		}
-		cues.add(cueIn);
-		return (cues.size()-1);
+	public void setFaderMode(String faderModeIn) {
+		this.faderMode = faderModeIn;
+	}
+	public void setIndependent(boolean independentIn) {
+		this.independent = independentIn;
+	}
+	public void setHtp(boolean htpIn) {
+		this.htp = htpIn;
+	}
+	public void setAssert(boolean assertIn) {
+		this.assertBool = assertIn;
+	}
+	public void setBlock(boolean blockIn) {
+		this.blockBool = blockIn;
+	}
+	public void setBackground(boolean backgroundIn) {
+		this.background = backgroundIn;
+	}
+	public void setSoloMode(boolean soloModeIn) {
+		this.soloMode = soloModeIn;
+	}
+	public void setTimecodeList(int timecodeListIn) {
+		this.timecodeList = timecodeListIn;
+	}
+	public void setOosSync(boolean oosSyncIn) {
+		this.oosSync = oosSyncIn;
+	}
+	public void setLinkedCueLists(ArrayList<Integer> linkedCueListsIn) {
+		this.linkedCueLists = linkedCueListsIn;
 	}
 	
 	/*
-	 * CONSTRUCTORS
+	 * CONSTRUCTOR
 	 */
-	public Cuelist(int cuelistNumIn, String UIDin, String nameIn, String playbackModeIn, String faderModeIn, boolean faderModeIndependenceIn, boolean HTPin, boolean assertIn,
-			boolean blockIn, boolean backgroundIn, boolean soloModeIn, int timecodeListIn, boolean OOSsyncIn) {
-		
+	public Cuelist(int cuelistNumIn, int indexIn, String uidIn) {
 		this.cuelistNum = cuelistNumIn;
-		this.UID = UIDin;
-		this.name = nameIn;
-		this.playbackMode = playbackModeIn;
-		this.faderMode = faderModeIn;
-		this.faderModeIndependence = faderModeIndependenceIn;
-		this.HTP = HTPin;
-		this.assertBool = assertIn;
-		this.block = blockIn;
-		this.background = backgroundIn;
-		this.soloMode = soloModeIn;
-		this.timecodeList = timecodeListIn;
-		this.OOSsync = OOSsyncIn;
-		
-		this.cueCount = 0;
+		this.index = indexIn;
+		this.uid = uidIn;
 	}
-	//TODO: Add non-ETC Cuelist Constructors
 }

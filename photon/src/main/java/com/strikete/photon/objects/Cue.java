@@ -2,301 +2,324 @@ package com.strikete.photon.objects;
 
 import java.util.ArrayList;
 
-import com.strikete.photon.Main;
-
-public class Cue {
+public class Cue implements CsvLevelDataSetter {
 
 	/*
 	 * VARIABLES
 	 */
-	private float cueNumber;
-	private String UID;
-	private String name;
-	private int upTimeDuration;
-	private int upTimeDelay;
-	private int downTimeDuration;
-	private int downTimeDelay;
-	private int focusTimeDuration;
-	private int focusTimeDelay;
-	private int colorTimeDuration;
-	private int colorTimeDelay;
-	private int beamTimeDuration;
-	private int beamTimeDelay;
+	private float cueNum;
+	private int index;
+	private String uid;
+	private int cuelistNum;
+	private int part;
+	
+	private String label;
+	private float upTimeDuration;
+	private float upTimeDelay;
+	private float downTimeDuration;
+	private float downTimeDelay;
+	private float focusTimeDuration;
+	private float focusTimeDelay;
+	private float colorTimeDuration;
+	private float colorTimeDelay;
+	private float beamTimeDuration;
+	private float beamTimeDelay;
 	private boolean preheat;
-	private String curve; //Osc Number? (As described in the EOS ShowControl Guide)
+	private int curve; //Does this need to be a different number type?
 	private int rate;
 	private String mark;
-	private String block;
-	private String assertString;
-	private String linkString; //Osc Number? OR String?
-	private int followTime; //In milliseconds
-	private int hangTime; //In milliseconds
+	private String blockVar;
+	private String assertVar;
+	private String link;
+	private float followTime;
+	private float hangTime;
 	private boolean allFade;
 	private int loop;
 	private boolean solo;
 	private String timecode;
+	private int partCount;
+	private ArrayList<Integer> effectList = new ArrayList<Integer>();
+	private ArrayList<Integer> linkedCuelists = new ArrayList<Integer>();
+	private String extLinkAction;
 	
-	//private Cue[] cueParts = new Cue[65535];
-	private ArrayList<Cue> cueParts = new ArrayList<Cue>();
+	private ArrayList<Integer> channels = new ArrayList<Integer>();
+	private ArrayList<String> parameters = new ArrayList<String>();
+	private ArrayList<Float> levels = new ArrayList<Float>();
 	
-	private Cuelist parentCuelist;
+	private float timeData;
+	private float duration;
+	private String mode;
+	private String cueNotes;
+	private String sceneText;
+	private String sceneEnd;
 	
-	private ArrayList<Channel> channels = new ArrayList<Channel>();
-	private ArrayList<Effect> effects = new ArrayList<Effect>();
-	private ArrayList<Preset> presets = new ArrayList<Preset>();
-	private ArrayList<IntensityPalette> intensityPalettes = new ArrayList<IntensityPalette>();
-	private ArrayList<FocusPalette> focusPalettes = new ArrayList<FocusPalette>();
-	private ArrayList<ColorPalette> colorPalettes = new ArrayList<ColorPalette>();
-	private ArrayList<BeamPalette> beamPalettes = new ArrayList<BeamPalette>();
-	
-	
-	/*
-	 * METHODS - RELATING TO PARENT CUELIST
-	 */
-	public Cuelist getParentCuelist() {
-		return this.parentCuelist;
-	}
-	public void setParentCuelist(Cuelist cuelistIn) {
-		this.parentCuelist = cuelistIn;
-	}
 	
 	/*
-	 * METHODS - ADDING ATTACHED OBJECTS
-	 */
-	public void addChannel(Channel channelIn) {
-		channels.add(channelIn);
-	}
-	public void addEffect(Effect effectIn) {
-		effects.add(effectIn);
-	}
-	public void addPreset(Preset presetIn) {
-		presets.add(presetIn);
-	}
-	public void addIntensityPalette(IntensityPalette ipIn) {
-		intensityPalettes.add(ipIn);
-	}
-	public void addFocusPalette(FocusPalette fpIn) {
-		focusPalettes.add(fpIn);
-	}
-	public void addColorPalette(ColorPalette cpIn) {
-		colorPalettes.add(cpIn);
-	}
-	public void addBeamPalette(BeamPalette bpIn) {
-		beamPalettes.add(bpIn);
-	}
-	
-	/*
-	 * METHODS - ATTACHED OBJECT GETTERS
-	 */
-	public Channel getChannel(int index) {
-		return channels.get(index);
-	}
-	public Preset getPreset(int index) {
-		return presets.get(index);
-	}
-	public IntensityPalette getIntensityPalette(int index) {
-		return intensityPalettes.get(index);
-	}
-	public FocusPalette getFocusPalette(int index) {
-		return focusPalettes.get(index);
-	}
-	public ColorPalette getColorPalette(int index) {
-		return colorPalettes.get(index);
-	}
-	public BeamPalette getBeamPalette(int index) {
-		return beamPalettes.get(index);
-	}
-	
-	/*
-	 * METHODS - ATTACHED OBJECT COUNT GETTERS
-	 */
-	public int getChannelSize() {
-		return channels.size();
-	}
-	public int getPresetSize() {
-		return presets.size();
-	}
-	public int getIntensityPaletteSize() {
-		return intensityPalettes.size();
-	}
-	public int getFocusPaletteSize() {
-		return focusPalettes.size();
-	}
-	public int getColorPaletteSize() {
-		return colorPalettes.size();
-	}
-	public int getBeamPaletteSize() {
-		return beamPalettes.size();
-	}
-	
-	/*
-	 * METHODS - GENERIC GETTERS
+	 * METHODS - GETTERS
 	 */
 	public float getCueNumber() {
-		return this.cueNumber;
+		return cueNum;
 	}
-	public String getUID() {
-		return this.UID;
+	public int getIndex() {
+		return index;
 	}
-	public String getName() {
-		return this.name;
+	public String getUid() {
+		return uid;
 	}
-	public int getUpTimeDuration() {
-		return this.upTimeDuration;
+	public int getCuelistNumber() {
+		return cuelistNum;
 	}
-	public int getUpTimeDelay() {
-		return this.upTimeDelay;
+	public int getPart() {
+		return part;
 	}
-	public int getDownTimeDuration() {
-		return this.downTimeDuration;
+	public String getLabel() {
+		return label;
 	}
-	public int getDownTimeDelay() {
-		return this.downTimeDelay;
+	public float getUpTimeDuration() {
+		return upTimeDuration;
 	}
-	public int getFocusTimeDuration() {
-		return this.focusTimeDuration;
+	public float getUpTimeDelay() {
+		return upTimeDelay;
 	}
-	public int getFocusTimeDelay() {
-		return this.focusTimeDelay;
+	public float getDownTimeDuration() {
+		return downTimeDuration;
 	}
-	public int getColorTimeDuration() {
-		return this.colorTimeDuration;
+	public float getDownTimeDelay() {
+		return downTimeDelay;
 	}
-	public int getColorTimeDelay() {
-		return this.colorTimeDelay;
+	public float getFocusTimeDuration() {
+		return focusTimeDuration;
 	}
-	public int getBeamTimeDuration() {
-		return this.beamTimeDuration;
+	public float getFocusTimeDelay() {
+		return focusTimeDelay;
 	}
-	public int getBeamTimeDelay() {
-		return this.beamTimeDelay;
+	public float getColorTimeDuration() {
+		return colorTimeDuration;
+	}
+	public float getColorTimeDelay() {
+		return colorTimeDelay;
+	}
+	public float getBeamTimeDuration() {
+		return beamTimeDuration;
+	}
+	public float getBeamTimeDelay() {
+		return beamTimeDelay;
 	}
 	public boolean getPreheat() {
-		return this.preheat;
+		return preheat;
 	}
-	public String getCurve() {
-		return this.curve;
+	public int getCurve() {
+		return curve;
 	}
 	public int getRate() {
-		return this.rate;
+		return rate;
 	}
 	public String getMark() {
-		return this.mark;
+		return mark;
 	}
 	public String getBlock() {
-		return this.block;
+		return blockVar;
 	}
 	public String getAssert() {
-		return this.assertString;
+		return assertVar;
 	}
-	public String getLinkString() {
-		return this.linkString;
+	public String getLink() {
+		return link;
 	}
-	public int getFollowTime() {
-		return this.followTime;
+	public float getFollowTime() {
+		return followTime;
 	}
-	public int getHangTime() {
-		return this.hangTime;
+	public float getHangTime() {
+		return hangTime;
 	}
 	public boolean getAllFade() {
-		return this.allFade;
+		return allFade;
 	}
 	public int getLoop() {
-		return this.loop;
+		return loop;
 	}
 	public boolean getSolo() {
-		return this.solo;
+		return solo;
 	}
 	public String getTimecode() {
-		return this.timecode;
+		return timecode;
 	}
 	public int getPartCount() {
-		return cueParts.size();
+		return partCount;
 	}
+	public ArrayList<Integer> getEffectList() {
+		return effectList;
+	}
+	public ArrayList<Integer> getLinkedCuelists() {
+		return linkedCuelists;
+	}
+	public String getExternalLinkAction() {
+		return extLinkAction;
+	}
+	public ArrayList<Integer> getChannels() {
+		return channels;
+	}
+	public ArrayList<String> getParameters() {
+		return parameters;
+	}
+	public ArrayList<Float> getLevels(){
+		return levels;
+	}
+	public float getTimeData() {
+		return timeData;
+	}
+	public float getDuration() {
+		return duration;
+	}
+	public String getMode() {
+		return mode;
+	}
+	public String getCueNotes() {
+		return cueNotes;
+	}
+	public String getSceneText() {
+		return sceneText;
+	}
+	public String getSceneEnd() {
+		return sceneEnd;
+	}
+	
 	
 	/*
-	 * METHODS RELATING TO CUE PARTS
+	 * METHODS - SETTERS
 	 */
-	public void addReplaceCuePart(final Cue cueIn) {
-		boolean matchFlag = false;
-		for(int x = 0; x < cueParts.size(); x++) {
-			if(cueParts.get(x).getUID().equals(cueIn.getUID())) {
-				matchFlag = true;
-				cueParts.set(x, cueIn);
-			}
-		}
-		if(!matchFlag) {
-			cueParts.add(cueIn);
-		}
+	public void setLabel(String labelIn) {
+		this.label = labelIn;
 	}
-	public int addReplaceCuePartReturnIndex(final Cue cueIn) {
-		for(int x = 0; x < cueParts.size(); x++) {
-			if(cueParts.get(x).getUID().equals(cueIn.getUID())) {
-				cueParts.set(x, cueIn);
-				return x;
-			}
-		}
-		cueParts.add(cueIn);
-		return (cueParts.size()-1);
-	}
-	public int cuePartNumberIndexReturn(float number) {
-		for(int x = 0; x < cueParts.size(); x++) {
-			if(cueParts.get(x).getCueNumber() == number) {
-				return x;
-			}
-		}
-		Main.log.error("CUE OBJ: Could not find Cue with Number: " + number + ", RETURNING ZERO!");
-		return 0;
-	}
-	
-	public int cuePartUidIndexReturn(String UID) {
-		for(int x = 0; x < cueParts.size(); x++) {
-			if(cueParts.get(x).getUID().equals(UID)) {
-				return x;
-			}
-		}
-		Main.log.error("CUE OBJ: Could not find Cue with UID: " + UID + ", RETURNING ZERO!");
-		return 0;
-	}
-	public Cue getPart(int index) {
-		return cueParts.get(index);
-	}
-	
-	/*
-	 * CONSTRUCTORS
-	 */
-	public Cue(float cueNumberIn, Cuelist parentCuelistIn, String UIDin, String nameIn, int upTimeDurationIn, int upTimeDelayIn, int downTimeDurationIn, int downTimeDelayIn,
-			int focusTimeDurationIn, int focusTimeDelayIn, int colorTimeDurationIn, int colorTimeDelayIn, int beamTimeDurationIn,
-			int beamTimeDelayIn, boolean preheatIn, String curveIn, int rateIn, String markIn, String blockIn, String assertStringIn,
-			String linkStringIn, int followTimeIn, int hangTimeIn, boolean allFadeIn, int loopIn, boolean soloIn, String timecodeIn) {
-		
-		this.cueNumber = cueNumberIn;
-		this.UID = UIDin;
-		this.name = nameIn;
+	public void setUpTimeDuration(float upTimeDurationIn) {
 		this.upTimeDuration = upTimeDurationIn;
+	}
+	public void setUpTimeDelay(float upTimeDelayIn) {
 		this.upTimeDelay = upTimeDelayIn;
+	}
+	public void setDownTimeDuration(float downTimeDurationIn) {
 		this.downTimeDuration = downTimeDurationIn;
+	}
+	public void setDownTimeDelay(float downTimeDelayIn) {
 		this.downTimeDelay = downTimeDelayIn;
+	}
+	public void setFocusTimeDuration(float focusTimeDurationIn) {
 		this.focusTimeDuration = focusTimeDurationIn;
+	}
+	public void setFocusTimeDelay(float focusTimeDelayIn) {
 		this.focusTimeDelay = focusTimeDelayIn;
+	}
+	public void setColorTimeDuration(float colorTimeDurationIn) {
 		this.colorTimeDuration = colorTimeDurationIn;
+	}
+	public void setColorTimeDelay(float colorTimeDelayIn) {
 		this.colorTimeDelay = colorTimeDelayIn;
+	}
+	public void setBeamTimeDuration(float beamTimeDurationIn) {
 		this.beamTimeDuration = beamTimeDurationIn;
+	}
+	public void setBeamTimeDelay(float beamTimeDelayIn) {
 		this.beamTimeDelay = beamTimeDelayIn;
+	}
+	public void setPreheat(boolean preheatIn) {
 		this.preheat = preheatIn;
+	}
+	public void setCurve(int curveIn) {
 		this.curve = curveIn;
+	}
+	public void setRate(int rateIn) {
 		this.rate = rateIn;
+	}
+	public void setMark(String markIn) {
 		this.mark = markIn;
-		this.block = blockIn;
-		this.assertString = assertStringIn;
-		this.linkString = linkStringIn;
+	}
+	public void setBlock(String blockIn) {
+		this.blockVar = blockIn;
+	}
+	public void setAssert(String assertIn) {
+		this.assertVar = assertIn;
+	}
+	public void setLink(String linkIn) {
+		this.link = linkIn;
+	}
+	public void setFollowTime(float followTimeIn) {
 		this.followTime = followTimeIn;
+	}
+	public void setHangTime(float hangTimeIn) {
 		this.hangTime = hangTimeIn;
+	}
+	public void setAllFade(boolean allFadeIn) {
 		this.allFade = allFadeIn;
+	}
+	public void setLoop(int loopIn) {
 		this.loop = loopIn;
+	}
+	public void setSolo(boolean soloIn) {
 		this.solo = soloIn;
+	}
+	public void setTimecode(String timecodeIn) {
 		this.timecode = timecodeIn;
-		
-		this.parentCuelist = parentCuelistIn;
+	}
+	public void setPartCount(int partCountIn) {
+		this.partCount = partCountIn;
+	}
+	public void setEffectList(ArrayList<Integer> effectListIn) {
+		this.effectList = effectListIn;
+	}
+	public void setLinkedCueLists(ArrayList<Integer> linkedCuelistsIn) {
+		this.linkedCuelists = linkedCuelistsIn;
+	}
+	public void setExternalLinkAction(String extLinkActionIn) {
+		this.extLinkAction = extLinkActionIn;
+	}
+	public void setChannels(ArrayList<Integer> channelsIn) {
+		this.channels = channelsIn;
+	}
+	public void setParameters(ArrayList<String> parametersIn) {
+		this.parameters = parametersIn;
+	}
+	public void setLevels(ArrayList<Float> levelsIn) {
+		this.levels = levelsIn;
+	}
+	public void setTimeData(float timeDataIn) {
+		this.timeData = timeDataIn;
+	}
+	public void setDuration(float durationIn) {
+		this.duration = durationIn;
+	}
+	public void setMode(String modeIn) {
+		this.mode = modeIn;
+	}
+	public void setCueNotes(String cueNotesIn) {
+		this.cueNotes = cueNotesIn;
+	}
+	public void setSceneText(String sceneTextIn) {
+		this.sceneText = sceneTextIn;
+	}
+	public void setSceneEnd(String sceneEndIn) {
+		this.sceneEnd = sceneEndIn;
+	}
+	
+	
+	/*
+	 * METHODS - INTERFACES
+	 */
+	@Override
+	public void addCsvLevelData(int channelIn, String parameterIn, float levelIn) {
+		channels.add(channelIn);
+		parameters.add(parameterIn);
+		levels.add(levelIn);
+	}
+	
+	
+	/*
+	 * CONSTRUCTOR
+	 */
+	public Cue(float cueNumberIn, int indexIn, String uidIn, int cuelistNumberIn, int partIn) {
+		this.cueNum = cueNumberIn;
+		this.index = indexIn;
+		this.uid = uidIn;
+		this.cuelistNum = cuelistNumberIn;
+		this.part = partIn;
 	}
 }
