@@ -7,51 +7,53 @@ public class Group {
 	/*
 	 * VARIABLES
 	 */
-	private String UID;
-	private ArrayList<Channel> channels = new ArrayList<Channel>();
-	private String name;
 	private float groupNum;
+	private int index;
+	private String uid;
+	private String label;
+	private ArrayList<Integer> channels = new ArrayList<Integer>();
+	
 	
 	/*
-	 * METHODS
+	 * METHODS - GETTERS
 	 */
-	public String getUID() {
-		return this.UID;
+	public float getGroupNumber() {
+		return groupNum;
 	}
-	public ArrayList<Channel> getChannels(){
+	public float getIndexNumber() {
+		return index;
+	}
+	public String getUid() {
+		return uid;
+	}
+	public String getLabel() {
+		return label;
+	}
+	public ArrayList<Integer> getChannels(){
 		return channels;
 	}
-	public ArrayList<Integer> getChannelsAsInt(){
-		ArrayList<Integer> channelsAsInt = new ArrayList<Integer>();
-		for(int x = 0; x < channels.size(); x++) {
-			channelsAsInt.add(channels.get(x).getChannelNum());
-		}
-		return channelsAsInt;
-	}
-	public Channel getChannel(int index) {
-		return channels.get(index);
-	}
-	public String getName() {
-		return this.name;
-	}
-	public int getChannelSize() {
-		return channels.size();
-	}
-	public float getGroupNum() {
-		return this.groupNum;
-	}
 	
 	
-	public void addChannel(Channel channelIn) { //As of right now if you need to modify channels you'll just need to create a new group object.
-		channels.add(channelIn);
+	/*
+	 * METHODS - SETTERS
+	 */
+	public void setLabel(String labelIn) {
+		this.label = labelIn;
 	}
+	public void setChannels(ArrayList<Integer> channelsIn) {
+		this.channels = channelsIn;
+	}
+	public void addChannel(int channelIn) {
+		this.channels.add(channelIn);
+	}
+	
 	
 	/*
 	 * CONSTRUCTOR
 	 */
-	public Group(String UIDin, String nameIn, float groupNumIn) {
-		this.UID = UIDin;
-		this.name = nameIn;
+	public Group(float groupNumIn, int indexIn, String uidIn) {
 		this.groupNum = groupNumIn;
+		this.index = indexIn;
+		this.uid = uidIn;
 	}
 }
