@@ -1,16 +1,19 @@
 package com.strikete.photon.objects;
 
+import java.util.ArrayList;
+
 public class Sub {
 	
 	/*
 	 * VARIABLES
 	 */
-	private float subNum;
-	private String UID;
-	private String name;
+	private int subNum;
+	private int index;
+	private String uid;
+	private String label;
 	private String mode;
 	private String faderMode;
-	private boolean HTP;
+	private boolean htp;
 	private boolean exclusive;
 	private boolean background;
 	private boolean restore;
@@ -18,83 +21,31 @@ public class Sub {
 	private String upTime;
 	private String dwellTime;
 	private String downTime;
-	private Effect[] effects = new Effect[512];
-	private int effectCount;
+	private ArrayList<Integer> effectList = new ArrayList<Integer>();
+	private ArrayList<Integer> channels = new ArrayList<Integer>();
+	private ArrayList<String> parameters = new ArrayList<String>();
+	private ArrayList<Float> levels = new ArrayList<Float>();
+	
 	
 	/*
-	 * METHODS
+	 * METHODS - GETTERS
 	 */
-	public float getSubNum() {
-		return this.subNum;
+	public int getSubNumber() {
+		return subNum;
 	}
-	public String getUID() {
-		return this.UID;
-	}
-	public String getName() {
-		return this.name;
-	}
-	public String getMode() {
-		return this.mode;
-	}
-	public String getFaderMode() {
-		return this.faderMode;
-	}
-	public boolean getHTP() {
-		return this.HTP;
-	}
-	public boolean getExclusive() {
-		return this.exclusive;
-	}
-	public boolean getBackground() {
-		return this.background;
-	}
-	public boolean getRestore() {
-		return this.restore;
-	}
-	public String getPriority() {
-		return this.priority;
-	}
-	public String getUpTime() {
-		return this.upTime;
-	}
-	public String getDwellTime() {
-		return this.dwellTime;
-	}
-	public String getDownTime() {
-		return this.downTime;
-	}
-	public Effect getEffect(int indexNum) {
-		return this.effects[indexNum];
-	}
-	public int getEffectCount() {
-		return this.effectCount;
+	public int getIndexNumber() {
+		return index;
 	}
 	
-	public void addEffect(Effect effectIn) {
-		this.effects[effectCount] = effectIn;
-		effectCount++;
-	}
+	
+	/*
+	 * METHODS - SETTERS
+	 */
+	
+	
 	
 	/*
 	 * CONSTRUCTOR
 	 */
-	public Sub(float subNumIn, String UIDin, String nameIn, String modeIn, String faderModeIn, boolean HTPin, boolean exclusiveIn,
-			boolean backgroundIn, boolean restoreIn, String priorityIn, String upTimeIn, String dwellTimeIn, String downTimeIn) {
-		
-		this.subNum = subNumIn;
-		this.UID = UIDin;
-		this.name = nameIn;
-		this.mode = modeIn;
-		this.faderMode = faderModeIn;
-		this.HTP = HTPin;
-		this.exclusive = exclusiveIn;
-		this.background = backgroundIn;
-		this.restore = restoreIn;
-		this.priority = priorityIn;
-		this.upTime = upTimeIn;
-		this.dwellTime = dwellTimeIn;
-		this.downTime = downTimeIn;
-		this.effectCount = 0;
-	}
-
+	
 }
