@@ -20,7 +20,7 @@ public class Group {
 	public float getGroupNumber() {
 		return groupNum;
 	}
-	public float getIndexNumber() {
+	public float getIndex() {
 		return index;
 	}
 	public String getUid() {

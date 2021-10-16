@@ -33,7 +33,7 @@ public class Sub implements CsvLevelDataSetter {
 	public int getSubNumber() {
 		return subNum;
 	}
-	public int getIndexNumber() {
+	public int getIndex() {
 		return index;
 	}
 	public String getUid() {

@@ -27,7 +27,7 @@ public class Preset implements CsvLevelDataSetter {
 	public float getPresetNumber() {
 		return presetNum;
 	}
-	public int getIndexNumber() {
+	public int getIndex() {
 		return index;
 	}
 	public String getUid() {
@@ -111,5 +111,10 @@ public class Preset implements CsvLevelDataSetter {
 	/*
 	 * CONSTRUCTOR
 	 */
+	public Preset(float presetNumIn, int indexIn, String uidIn) {
+		this.presetNum = presetNumIn;
+		this.index = indexIn;
+		this.uid = uidIn;
+	}
 	
 }

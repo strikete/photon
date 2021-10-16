@@ -2,62 +2,108 @@ package com.strikete.photon.objects;
 
 import java.util.ArrayList;
 
-public class Palette {
+public class Palette implements CsvLevelDataSetter {
 
 	/*
 	 * VARIABLES
 	 */
 	private float paletteNum;
-	private String UID;
-	private String name;
+	private int index;
+	private String uid;
+	private String label;
 	private boolean absolute;
 	private boolean locked;
-	private ArrayList<Channel> channels = new ArrayList<Channel>();
-	private ArrayList<Effect> effects = new ArrayList<Effect>();
+	private ArrayList<Integer> channelList = new ArrayList<Integer>();
+	private ArrayList<Integer> byTypeChannelList = new ArrayList<Integer>();
+	private ArrayList<Integer> channels = new ArrayList<Integer>();
+	private ArrayList<String> parameters = new ArrayList<String>();
+	private ArrayList<Float> levels = new ArrayList<Float>();
+	
 	
 	/*
-	 * METHODS
+	 * METHODS - GETTERS
 	 */
-	
-	public float getPaletteNum() {
-		return this.paletteNum;
+	public float getPaletteNumber() {
+		return paletteNum;
 	}
-	public String getUID() {
-		return this.UID;
+	public int getIndex() {
+		return index;
 	}
-	public String getName() {
-		return this.name;
+	public String getUid() {
+		return uid;
+	}
+	public String getLabel() {
+		return label;
 	}
 	public boolean getAbsolute() {
-		return this.absolute;
+		return absolute;
 	}
 	public boolean getLocked() {
-		return this.locked;
+		return locked;
 	}
-	public Channel getChannel(int indexNum) {
-		return channels.get(indexNum);
+	public ArrayList<Integer> getChannelList() {
+		return channelList;
 	}
-	public int getChannelCount() {
-		return channels.size();
+	public ArrayList<Integer> getByTypeChannelList() {
+		return byTypeChannelList;
 	}
-	public int getEffectCount() {
-		return effects.size();
+	public ArrayList<Integer> getChannels() {
+		return channels;
 	}
-	public void addChannel(Channel channelIn) {
-		channels.add(channelIn);
+	public ArrayList<String> getParameters() {
+		return parameters;
 	}
-	public void addEffect(Effect effectIn) {
-		effects.add(effectIn);
+	public ArrayList<Float> getLevels() {
+		return levels;
 	}
+	
+	
+	/*
+	 * METHODS - SETTERS
+	 */
+	public void setLabel(String labelIn) {
+		this.label = labelIn;
+	}
+	public void setAbsolute(boolean absoluteIn) {
+		this.absolute = absoluteIn;
+	}
+	public void setLocked(boolean lockedIn) {
+		this.locked = lockedIn;
+	}
+	public void setChannelList(ArrayList<Integer> channelListIn) {
+		this.channelList = channelListIn;
+	}
+	public void setByTypeChannelList(ArrayList<Integer> byTypeChannelListIn) {
+		this.byTypeChannelList = byTypeChannelListIn;
+	}
+	public void setChannels(ArrayList<Integer> channelsIn) {
+		this.channels = channelsIn;
+	}
+	public void setParamters(ArrayList<String> parametersIn) {
+		this.parameters = parametersIn;
+	}
+	public void setLevels(ArrayList<Float> levelsIn) {
+		this.levels = levelsIn;
+	}
+	
+	
+	/*
+	 * METHODS - INTERFACES
+	 */
+	@Override
+	public void addCsvLevelData(int channelIn, String parameterIn, float levelIn) {
+		this.channels.add(channelIn);
+		this.parameters.add(parameterIn);
+		this.levels.add(levelIn);
+	}
+	
 	
 	/*
 	 * CONSTRUCTOR
 	 */
-	public Palette(float paletteNumIn, String UIDin, String nameIn, boolean absoluteIn, boolean lockedIn) {
+	public Palette(float paletteNumIn, int indexIn, String uidIn) {
 		this.paletteNum = paletteNumIn;
-		this.UID = UIDin;
-		this.name = nameIn;
-		this.absolute = absoluteIn;
-		this.locked = lockedIn;
+		this.index = indexIn;
+		this.uid = uidIn;
 	}
 }
