@@ -72,7 +72,7 @@ public class CsvCueLevelParser {
 				return x;
 			}
 		}
-		Main.log.error("CSV PARSER: Could not find corresponding CueLevel, RETURNING ZERO!");
+		//Main.log.error("CSV PARSER: Could not find corresponding CueLevel, RETURNING ZERO!");
 		return 0;
 	}
 	public int getCueLevelWithPartIndex(float cueNumber, int cuePart, int channelNumber) {
@@ -81,7 +81,7 @@ public class CsvCueLevelParser {
 				return x;
 			}
 		}
-		Main.log.error("CSV PARSER: Could not find corresponding CueLevel, RETURNING ZERO!");
+		//Main.log.error("CSV PARSER: Could not find corresponding CueLevel, RETURNING ZERO!");
 		return 0;
 	}
 	
@@ -151,9 +151,9 @@ public class CsvCueLevelParser {
 		    }
 			
 		} catch (FileNotFoundException e) {
-			Main.log.error("CSV PARSER: File not found!",e);
+			//Main.log.error("CSV PARSER: File not found!",e);
 		} catch (IOException e) {
-			Main.log.error("CSV PARSER: IO Exception!",e);
+			//Main.log.error("CSV PARSER: IO Exception!",e);
 		}
 		
 	}

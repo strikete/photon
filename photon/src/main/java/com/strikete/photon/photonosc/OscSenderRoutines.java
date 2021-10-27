@@ -1,6 +1,8 @@
-package com.strikete.photon.osc;
+package com.strikete.photon.photonosc;
 
 import com.strikete.photon.objects.Channel;
+import com.strikete.photon.osc.OscOutgoing;
+import com.strikete.photon.osc.OscSender;
 
 public class OscSenderRoutines {
 	
@@ -67,7 +69,7 @@ public class OscSenderRoutines {
 		oscSender.sendOscMessage(OscOutgoing.KEY_ENTER);
 	}
 	public void selectChannel(Channel channelIn) {
-		oscSender.sendOscMessage(OscOutgoing.SELECT_CHANNEL + channelIn.getChannelNum());
+		//oscSender.sendOscMessage(OscOutgoing.SELECT_CHANNEL + channelIn.getChannelNum());
 		oscSender.sendOscMessage(OscOutgoing.KEY_ENTER);
 	}
 	

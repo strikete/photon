@@ -49,6 +49,19 @@ public class OscSender {
 	
 	
 	/*
+	 * METHODS - PARAMETERIZE STRING
+	 */
+	public String parameterizeString(String address, ArrayList<String> parameters) {
+		for(int x = 0; x < parameters.size(); x++) {
+			String parameterString = "[parameter" + Integer.toString((x+1)) +"]";
+			address.replace(parameterString, parameters.get(x));
+		}
+		return address;
+	}
+	
+	
+	
+	/*
 	 * METHODS - LOWER LEVEL OSC MESSAGE SENDING
 	 */
 	public synchronized void sendOscMessage(OSCMessage message) {

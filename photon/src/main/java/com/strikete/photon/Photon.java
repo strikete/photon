@@ -1,7 +1,9 @@
 package com.strikete.photon;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import com.strikete.photon.objects.BeamPalette;
@@ -21,6 +23,10 @@ import com.strikete.photon.objects.Pixelmap;
 import com.strikete.photon.objects.Preset;
 import com.strikete.photon.objects.Snapshot;
 import com.strikete.photon.objects.Sub;
+import com.strikete.photon.osc.OscInterpreter;
+import com.strikete.photon.osc.OscOutgoing;
+import com.strikete.photon.osc.OscSender;
+import com.strikete.photon.photonosc.PhotonOscRoutines;
 
 public class Photon {
 
@@ -29,6 +35,15 @@ public class Photon {
 	 */
 	public static Logger log;
 	public static final String version = "SNAPSHOT 0.9.0";
+	public OscSender sender;
+	public OscInterpreter interpreter;
+	
+	
+	/*
+	 * VARIABLES - EOS SPECIFIC
+	 */
+	private String eosVersion;
+	
 	
 	/*
 	 * VARIABLES - OBJECTS
@@ -55,13 +70,18 @@ public class Photon {
 	/*
 	 * METHODS - GETTERS
 	 */
-	
+	public String getEosVersion() {
+		return eosVersion;
+	}
 	
 	
 	/*
 	 * METHODS - SETTERS
 	 */
-	
+	public void setEosVersion(String versionIn) {
+		this.eosVersion = versionIn;
+		System.out.println(eosVersion);
+	}
 	
 	
 	/*
@@ -70,6 +90,16 @@ public class Photon {
 	private static void printWelcomeMessage() { //Only to be called after the logger object has been configured
 		log.info("Welcome to Photon " + version + " .");
 		log.info("Photon is authored by Benji Arrigo in conjunction with Strike Theatre Electronics.");	
+	}
+	
+	
+	/*
+	 * METHODS - CORE FUNCTIONS
+	 */
+	
+	public void updateOscObjects() {
+		log.debug("PHOTON: Updating OSC Objects.");
+		sender.sendOscMessage(OscOutgoing.GET_VERSION);
 	}
 	
 	
@@ -96,8 +126,15 @@ public class Photon {
 		subs = new ArrayList<Sub>();
 	}
 	
-	public void initializeOsc() {
+	public void initializeOsc(String targetIp,int oscClientPort, int oscIncomingPort) {
+		this.sender = new OscSender(targetIp,oscClientPort);
+		try {
+			this.interpreter = new OscInterpreter(this, oscIncomingPort);
+		} catch (IOException e) {
+			log.error("PHOTON ERROR: COULD NOT ESTABLISH LISTENER AT PORT: " + oscIncomingPort);
+		}
 		
+		PhotonOscRoutines photonOscRoutines = new PhotonOscRoutines(this, 100);
 	}
 	
 	
@@ -105,6 +142,8 @@ public class Photon {
 	 * CONSTRUCTOR
 	 */
 	public Photon() {
+		log = Logger.getLogger(Photon.class);
+		BasicConfigurator.configure();
 		initializeVariables();
 		
 	}

@@ -2,6 +2,7 @@ package com.strikete.photon.osc;
 import java.util.UUID;
 import java.util.function.Consumer;
 import com.illposed.osc.OSCMessage;
+import com.strikete.photon.Photon;
 
 public class OscListener {
 
@@ -9,6 +10,7 @@ public class OscListener {
 	 * VARIABLES
 	 */
 	private UUID uuid;
+	private Photon photon;
 	private String addressListener;
 	private Consumer<OSCMessage> consumer;
 	private boolean exactMatch;
@@ -45,7 +47,7 @@ public class OscListener {
 	/*
 	 * METHODS - POST TO CONSUMER
 	 */
-	public void postToConsumer(OSCMessage message) {
+	public void postToConsumer(OSCMessage message, Photon photon) {
 		consumer.accept(message);
 	}
 	
@@ -53,7 +55,8 @@ public class OscListener {
 	/*
 	 * CONSTRUCTOR
 	 */
-	public OscListener(String listenerStringIn, Consumer<OSCMessage> consumerIn, boolean exactMatchIn) {
+	public OscListener(Photon photonIn, String listenerStringIn, Consumer<OSCMessage> consumerIn, boolean exactMatchIn) {
+		this.photon = photonIn;
 		this.uuid = UUID.randomUUID();
 		this.addressListener = listenerStringIn;
 		this.consumer = consumerIn;
@@ -61,7 +64,8 @@ public class OscListener {
 		this.expiration = false;
 		this.expirationNum = 0;
 	}
-	public OscListener(String listenerStringIn, Consumer<OSCMessage> consumerIn, boolean exactMatchIn, boolean expirationIn, int expirationNumber) {
+	public OscListener(Photon photonIn, String listenerStringIn, Consumer<OSCMessage> consumerIn, boolean exactMatchIn, boolean expirationIn, int expirationNumber) {
+		this.photon = photonIn;
 		this.uuid = UUID.randomUUID();
 		this.addressListener = listenerStringIn;
 		this.consumer = consumerIn;
