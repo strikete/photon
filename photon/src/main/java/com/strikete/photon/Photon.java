@@ -37,34 +37,35 @@ public class Photon {
 	public static final String version = "SNAPSHOT 0.9.0";
 	public OscSender sender;
 	public OscInterpreter interpreter;
+	public PhotonDataUtilities dataUtility;
 	
 	
 	/*
 	 * VARIABLES - EOS SPECIFIC
 	 */
-	private String eosVersion;
+	public String eosVersion;
 	
 	
 	/*
 	 * VARIABLES - OBJECTS
 	 */
-	private ArrayList<BeamPalette> beamPalettes;
-	private ArrayList<Channel> channels;
-	private ArrayList<ColorPalette> colorPalettes;
-	private ArrayList<Cue> cues;
-	private ArrayList<Cuelist> cuelists;
-	private ArrayList<Curve> curves;
-	private ArrayList<Effect> effects;
-	private ArrayList<Fixture> fixtures;
-	private ArrayList<FocusPalette> focusPalettes;
-	private ArrayList<Group> groups;
-	private ArrayList<IntensityPalette>intensityPalettes;
-	private ArrayList<Macro> macros;
-	private ArrayList<MagicSheet> magicSheets;
-	private ArrayList<Pixelmap> pixelmaps;
-	private ArrayList<Preset> presets;
-	private ArrayList<Snapshot> snapshots;
-	private ArrayList<Sub> subs;
+	public ArrayList<BeamPalette> beamPalettes;
+	public ArrayList<Channel> channels;
+	public ArrayList<ColorPalette> colorPalettes;
+	public ArrayList<Cue> cues;
+	public ArrayList<Cuelist> cuelists;
+	public ArrayList<Curve> curves;
+	public ArrayList<Effect> effects;
+	public ArrayList<Fixture> fixtures;
+	public ArrayList<FocusPalette> focusPalettes;
+	public ArrayList<Group> groups;
+	public ArrayList<IntensityPalette>intensityPalettes;
+	public ArrayList<Macro> macros;
+	public ArrayList<MagicSheet> magicSheets;
+	public ArrayList<Pixelmap> pixelmaps;
+	public ArrayList<Preset> presets;
+	public ArrayList<Snapshot> snapshots;
+	public ArrayList<Sub> subs;
 	
 	
 	/*
@@ -145,6 +146,6 @@ public class Photon {
 		log = Logger.getLogger(Photon.class);
 		BasicConfigurator.configure();
 		initializeVariables();
-		
+		this.dataUtility = new PhotonDataUtilities(this);
 	}
 }
