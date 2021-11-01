@@ -3,6 +3,8 @@ package com.strikete.photon;
 import java.io.IOException;
 import java.util.Scanner;
 
+import com.strikete.photon.temp.BeatProcessor;
+
 public class Main {
 	
 	/*
@@ -11,7 +13,6 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		
 		Photon photon = new Photon();
-		Scanner scanner = new Scanner(System.in);
 		
 		String targetIp = "192.168.10.111";
 		int targetPort = 3032;
@@ -19,6 +20,7 @@ public class Main {
 		
 		photon.initializeOsc(targetIp, targetPort, listeningPort);
 		
+		BeatProcessor beatProcessor = new BeatProcessor(photon);
 		
 		while(true) {
 			photon.updateOscObjects();
