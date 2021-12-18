@@ -16,7 +16,8 @@ public class BeatTime {
 	public BeatTime(int startSampleNumIn, int endSampleNumIn) {
 		this.startSampleNumber = startSampleNumIn;
 		this.endSampleNumber = endSampleNumIn;
-		this.startSeconds = startSampleNumIn / 8000;
-		this.endSeconds = endSampleNumIn / 8000;
+		float modifier = (float) 8000.00;
+		this.startSeconds = startSampleNumIn / modifier;
+		this.endSeconds = endSampleNumIn / modifier;
 	}
 }

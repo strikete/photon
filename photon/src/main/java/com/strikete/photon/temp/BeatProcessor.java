@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import com.strikete.photon.Photon;
@@ -16,6 +17,7 @@ public class BeatProcessor {
 	 */
 	private static ArrayList<BeatTime> beatTimes = new ArrayList<BeatTime>();
 	private Photon photon;
+	private static final DecimalFormat df = new DecimalFormat("0.00");
 	
 	/*
 	 * METHODS
@@ -30,8 +32,8 @@ public class BeatProcessor {
 		
 		String strLine;
 		int currentSample = 0;
-		float amplitudeThreshold = (float) -7.000;
-		float amplitudeFloor = (float) -40.000;
+		float amplitudeThreshold = (float) -3.000;
+		float amplitudeFloor = (float) -49.000;
 		boolean activeBeat = false;
 		int activeBeatStartingSample = 0;
 		
@@ -76,17 +78,18 @@ public class BeatProcessor {
 		for(int x = 0; x < beatTimes.size(); x++) {
 			String oldCueNum = Integer.toString(cueCount);
 			cueCount++;
-			double oldFollowTime = (beatTimes.get(x).startSeconds-oldCueTime);
-			String senderMessageOldFollow = "Cue " + oldCueNum + " Follow " + Double.toString(oldFollowTime) + " #";
+			float oldFollowTime = (beatTimes.get(x).startSeconds-oldCueTime);
+			String senderMessageOldFollow = "Cue " + oldCueNum + " Follow " + df.format(oldFollowTime) + " #";
+			photon.sender.sendOscMessage("/eos/newcmd",senderMessageOldFollow);
 			
 			String cueNum = Integer.toString(cueCount); //New Cue Creation
 			String senderMessage = "Cue " + cueNum + " ##";
 			photon.sender.sendOscMessage("/eos/newcmd",senderMessage);
 			photon.sender.sendOscMessage("/eos/newcmd","Chan 1 Thru 3 @ 100 #");
-			String senderMessage2 = "Cue " + cueNum + " Time 0.1 #";
+			String senderMessage2 = "Cue " + cueNum + " Time 0.0 #";
 			photon.sender.sendOscMessage("/eos/newcmd", senderMessage2);
-			double followTime = (beatTimes.get(x).endSeconds - beatTimes.get(x).startSeconds);
-			String senderMessage3 = "Cue " + cueNum + " Follow " + Double.toString(followTime) + " #";
+			float followTime = (beatTimes.get(x).endSeconds - beatTimes.get(x).startSeconds);
+			String senderMessage3 = "Cue " + cueNum + " Follow " + df.format(followTime) + " #";
 			photon.sender.sendOscMessage("/eos/newcmd", senderMessage3);
 			
 			cueCount++;
@@ -97,9 +100,25 @@ public class BeatProcessor {
 			photon.sender.sendOscMessage("/eos/newcmd","Chan 1 Thru 3 @ 0 #");
 			senderMessage2 = "Cue " + cueNum + " Time 0.6 #";
 			oldCueTime = beatTimes.get(x).endSeconds;
+			photon.sender.sendOscMessage("/eos/newcmd",senderMessage2);
 			
 		}
 		
+	}
+	
+	public float findAverageBeatTime() {
+		ArrayList<Float> averageList = new ArrayList<Float>();
+		for(int x = 1; x < beatTimes.size(); x++) {
+			float time = beatTimes.get(x).startSeconds-beatTimes.get(x-1).startSeconds;
+			if(time <= 1) {
+				averageList.add(time);
+			}
+		}
+		double averageBig = 0;
+		for(int y = 0; y < averageList.size(); y++) {
+			averageBig = averageBig + averageList.get(y);
+		}
+		return (float) (averageBig / averageList.size());
 	}
 	
 	/*
@@ -115,6 +134,8 @@ public class BeatProcessor {
 		}
 		
 		setupCueRecording();
+		System.out.println(findAverageBeatTime());
+		
 		recordCues();
 		
 	}

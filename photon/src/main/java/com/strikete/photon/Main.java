@@ -23,7 +23,7 @@ public class Main {
 		BeatProcessor beatProcessor = new BeatProcessor(photon);
 		
 		while(true) {
-			photon.updateOscObjects();
+			//photon.updateOscObjects();
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
