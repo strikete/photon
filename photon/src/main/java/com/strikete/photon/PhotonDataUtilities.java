@@ -177,7 +177,7 @@ public class PhotonDataUtilities {
 		}
 		throw new ObjectNotFoundException("Could not find Color Palette #" + paletteNum + " !");
 	}
-	public int findCue(int cueNum, int index, String uid, int cuelistNum, int cuePart) throws ObjectNotFoundException {
+	public int findCue(float cueNum, int index, String uid, int cuelistNum, int cuePart) throws ObjectNotFoundException {
 		for(int x = 0; x < photon.cues.size(); x++) {
 			if(photon.cues.get(x).getCueNumber() == cueNum &&
 					photon.cues.get(x).getIndex() == index &&
@@ -199,7 +199,7 @@ public class PhotonDataUtilities {
 		}
 		throw new ObjectNotFoundException("Could not find Cuelist #" + cuelistNum + " !");
 	}
-	public int findCurve(int curveNum, int index, String uid) {
+	public int findCurve(int curveNum, int index, String uid) throws ObjectNotFoundException {
 		for(int x = 0; x < photon.curves.size(); x++) {
 			if(photon.curves.get(x).getCurveNumber() == curveNum &&
 					photon.beamPalettes.get(x).getIndex() == index &&

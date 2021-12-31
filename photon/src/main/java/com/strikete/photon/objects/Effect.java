@@ -13,7 +13,7 @@ public class Effect {
 	private String entry;
 	private String exit;
 	private String duration;
-	private String scale;
+	private int scale;
 	
 	
 	/*
@@ -43,7 +43,7 @@ public class Effect {
 	public String getDuration() {
 		return duration;
 	}
-	public String getScale() {
+	public int getScale() {
 		return scale;
 	}
 	
@@ -66,7 +66,7 @@ public class Effect {
 	public void setDuration(String durationIn) {
 		this.duration = durationIn;
 	}
-	public void setScale(String scaleIn) {
+	public void setScale(int scaleIn) {
 		this.scale = scaleIn;
 	}
 	

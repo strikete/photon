@@ -24,8 +24,8 @@ import com.strikete.photon.objects.Preset;
 import com.strikete.photon.objects.Snapshot;
 import com.strikete.photon.objects.Sub;
 import com.strikete.photon.osc.OscInterpreter;
-import com.strikete.photon.osc.OscOutgoing;
 import com.strikete.photon.osc.OscSender;
+import com.strikete.photon.photonosc.OscSenderRoutines;
 import com.strikete.photon.photonosc.PhotonOscRoutines;
 
 public class Photon {
@@ -38,6 +38,7 @@ public class Photon {
 	public OscSender sender;
 	public OscInterpreter interpreter;
 	public PhotonDataUtilities dataUtility;
+	public OscSenderRoutines senderRoutines;
 	
 	
 	/*
@@ -67,6 +68,7 @@ public class Photon {
 	public ArrayList<Snapshot> snapshots;
 	public ArrayList<Sub> subs;
 	
+	public int cuelistCount;
 	
 	/*
 	 * METHODS - GETTERS
@@ -100,7 +102,58 @@ public class Photon {
 	
 	public void updateOscObjects() {
 		log.debug("PHOTON: Updating OSC Objects.");
-		sender.sendOscMessage(OscOutgoing.GET_VERSION);
+		
+		senderRoutines.getPatchCount();
+		waitForPause(1000000000L); //Wait 1 second after last message
+		senderRoutines.getCuelistCount();
+		waitForPause(1000000000L); //Wait 1 second after last message
+		senderRoutines.getGroupCount();
+		waitForPause(1000000000L); //Wait 1 second after last message
+		senderRoutines.getMacroCount();
+		waitForPause(1000000000L); //Wait 1 second after last message
+		senderRoutines.getSubCount();
+		waitForPause(1000000000L); //Wait 1 second after last message
+		senderRoutines.getPresetCount();
+		waitForPause(1000000000L); //Wait 1 second after last message
+		senderRoutines.getIntensityPaletteCount();
+		waitForPause(1000000000L); //Wait 1 second after last message
+		senderRoutines.getFocusPaletteCount();
+		waitForPause(1000000000L); //Wait 1 second after last message
+		senderRoutines.getColorPaletteCount();
+		waitForPause(1000000000L); //Wait 1 second after last message
+		senderRoutines.getBeamPaletteCount();
+		waitForPause(1000000000L); //Wait 1 second after last message
+		senderRoutines.getCurveCount();
+		waitForPause(1000000000L); //Wait 1 second after last message
+		senderRoutines.getEffectCount();
+		waitForPause(1000000000L); //Wait 1 second after last message
+		senderRoutines.getSnapshotCount();
+		waitForPause(1000000000L); //Wait 1 second after last message
+		senderRoutines.getPixelmapCount();
+		waitForPause(1000000000L); //Wait 1 second after last message
+		senderRoutines.getMagicSheetCount();
+		waitForPause(1000000000L); //Wait 1 second after last message
+		
+		log.debug("PHOTON: Updating Cue Objects.");
+		for(int x = 0; x < cuelists.size(); x++) {
+			senderRoutines.getCueCount(cuelists.get(x).getCuelistNumber());
+		}
+	}
+	
+	public void waitForPause(long pauseTimeNano) { //Wait a set amount of time after receiving the last OSC message.
+		boolean working = true;
+		while(working) {
+			
+			try {
+				Thread.sleep(50); //Take a break
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			if(System.nanoTime() > (pauseTimeNano + interpreter.getLastTime())) { //Check to see the time since the last message was received
+				working = false;
+			}
+		}
 	}
 	
 	
@@ -125,8 +178,12 @@ public class Photon {
 		presets = new ArrayList<Preset>();
 		snapshots = new ArrayList<Snapshot>();
 		subs = new ArrayList<Sub>();
+		
+		
+		cuelistCount = 0;
 	}
 	
+	@SuppressWarnings("unused")
 	public void initializeOsc(String targetIp,int oscClientPort, int oscIncomingPort) {
 		this.sender = new OscSender(targetIp,oscClientPort);
 		try {
@@ -136,6 +193,7 @@ public class Photon {
 		}
 		
 		PhotonOscRoutines photonOscRoutines = new PhotonOscRoutines(this, 100);
+		this.senderRoutines = new OscSenderRoutines(sender);
 	}
 	
 	
@@ -147,5 +205,7 @@ public class Photon {
 		BasicConfigurator.configure();
 		initializeVariables();
 		this.dataUtility = new PhotonDataUtilities(this);
+		
+		printWelcomeMessage();
 	}
 }

@@ -1,9 +1,6 @@
 package com.strikete.photon;
 
 import java.io.IOException;
-import java.util.Scanner;
-
-import com.strikete.photon.temp.BeatProcessor;
 
 public class Main {
 	
@@ -20,7 +17,10 @@ public class Main {
 		
 		photon.initializeOsc(targetIp, targetPort, listeningPort);
 		
-		BeatProcessor beatProcessor = new BeatProcessor(photon);
+		photon.updateOscObjects();
+		
+		photon.waitForPause(5000000000L);
+		
 		
 		while(true) {
 			//photon.updateOscObjects();

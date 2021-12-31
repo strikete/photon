@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 import com.illposed.osc.OSCMessage;
 import com.strikete.photon.Photon;
 
-public class OscListener {
+public class OscListener implements Runnable {
 
 	/*
 	 * VARIABLES
@@ -16,6 +16,7 @@ public class OscListener {
 	private boolean exactMatch;
 	private boolean expiration;
 	private int expirationNum;
+	private OSCMessage message;
 	
 	
 	/*
@@ -47,10 +48,18 @@ public class OscListener {
 	/*
 	 * METHODS - POST TO CONSUMER
 	 */
-	public void postToConsumer(OSCMessage message, Photon photon) {
-		consumer.accept(message);
+	public void prepareConsumer(OSCMessage messageIn) {
+		message = messageIn;
 	}
 	
+	public void run() {
+		try {
+			consumer.accept(message);
+		}catch(NumberFormatException | ClassCastException | IndexOutOfBoundsException e) {
+			photon.log.error("An Object Conversion Error has occured. Some data may not be recorded.");
+		}
+		
+	}
 	
 	/*
 	 * CONSTRUCTOR

@@ -25,7 +25,7 @@ public class Cue implements CsvLevelDataSetter {
 	private float beamTimeDuration;
 	private float beamTimeDelay;
 	private boolean preheat;
-	private int curve; //Does this need to be a different number type?
+	private ArrayList<Integer> curve; //Does this need to be a different number type?
 	private int rate;
 	private String mark;
 	private String blockVar;
@@ -108,7 +108,7 @@ public class Cue implements CsvLevelDataSetter {
 	public boolean getPreheat() {
 		return preheat;
 	}
-	public int getCurve() {
+	public ArrayList<Integer> getCurve() {
 		return curve;
 	}
 	public int getRate() {
@@ -224,7 +224,7 @@ public class Cue implements CsvLevelDataSetter {
 	public void setPreheat(boolean preheatIn) {
 		this.preheat = preheatIn;
 	}
-	public void setCurve(int curveIn) {
+	public void setCurve(ArrayList<Integer> curveIn) {
 		this.curve = curveIn;
 	}
 	public void setRate(int rateIn) {

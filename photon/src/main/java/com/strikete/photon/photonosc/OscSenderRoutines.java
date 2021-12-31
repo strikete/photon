@@ -1,5 +1,7 @@
 package com.strikete.photon.photonosc;
 
+import java.util.ArrayList;
+
 import com.strikete.photon.objects.Channel;
 import com.strikete.photon.osc.OscOutgoing;
 import com.strikete.photon.osc.OscSender;
@@ -11,18 +13,27 @@ public class OscSenderRoutines {
 	 */
 	private OscSender oscSender;
 	
-
+	
 	/*
-	 * METHODS - COMMON TASKS - GET COUNTS
+	 * METHODS - COMMON TASKS - GET VERSION
 	 */
 	public void getVersion() {
 		oscSender.sendOscMessage(OscOutgoing.GET_VERSION);
 	}
+	
+	/*
+	 * METHODS - COMMON TASKS - GET COUNTS
+	 */
 	public void getPatchCount() {
 		oscSender.sendOscMessage(OscOutgoing.GET_PATCH_COUNT);
 	}
 	public void getCuelistCount() {
 		oscSender.sendOscMessage(OscOutgoing.GET_CUELIST_COUNT);
+	}
+	public void getCueCount(int cuelistNum) {
+		ArrayList<String> parameters = new ArrayList<String>();
+		parameters.add(Integer.toString(cuelistNum));
+		oscSender.sendOscMessage(oscSender.parameterizeString(OscOutgoing.GET_CUE_COUNT, parameters));
 	}
 	public void getGroupCount() {
 		oscSender.sendOscMessage(OscOutgoing.GET_GROUP_COUNT);
@@ -48,16 +59,20 @@ public class OscSenderRoutines {
 	public void getBeamPaletteCount() {
 		oscSender.sendOscMessage(OscOutgoing.GET_BEAM_PALETTE_COUNT);
 	}
-	public void getEffectcount() {
+	public void getCurveCount() {
+		oscSender.sendOscMessage(OscOutgoing.GET_CURVE_COUNT);
+	}
+	public void getEffectCount() {
 		oscSender.sendOscMessage(OscOutgoing.GET_EFFECT_COUNT);
 	}
-	
-	
-	/*
-	 * METHODS - COMMON TASKS - GET INFO
-	 */
-	public void getPatchInfo(int indexNumber) {
-		oscSender.sendOscMessage(OscOutgoing.GET_PATCH_INFO, indexNumber);
+	public void getSnapshotCount() {
+		oscSender.sendOscMessage(OscOutgoing.GET_SNAPSHOT_COUNT);
+	}
+	public void getPixelmapCount() {
+		oscSender.sendOscMessage(OscOutgoing.GET_PIXELMAP_COUNT);
+	}
+	public void getMagicSheetCount() {
+		oscSender.sendOscMessage(OscOutgoing.GET_MAGIC_SHEET_COUNT);
 	}
 	
 	
