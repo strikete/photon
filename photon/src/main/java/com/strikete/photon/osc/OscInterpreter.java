@@ -15,6 +15,7 @@ public class OscInterpreter implements OSCMessageListener{
 	/*
 	 * VARIABLES
 	 */
+	@SuppressWarnings("unused")
 	private Photon photon;
 	private OSCPortIn oscReceiver;
 	private int portNumber;

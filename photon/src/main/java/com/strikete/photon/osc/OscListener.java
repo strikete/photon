@@ -10,6 +10,7 @@ public class OscListener implements Runnable {
 	 * VARIABLES
 	 */
 	private UUID uuid;
+	@SuppressWarnings("unused")
 	private Photon photon;
 	private String addressListener;
 	private Consumer<OSCMessage> consumer;
@@ -56,7 +57,7 @@ public class OscListener implements Runnable {
 		try {
 			consumer.accept(message);
 		}catch(NumberFormatException | ClassCastException | IndexOutOfBoundsException e) {
-			photon.log.error("An Object Conversion Error has occured. Some data may not be recorded.");
+			Photon.log.error("An Object Conversion Error has occured. Some data may not be recorded.");
 		}
 		
 	}

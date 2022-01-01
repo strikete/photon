@@ -5,9 +5,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import com.illposed.osc.OSCMessage;
-import com.illposed.osc.OSCMessageInfo;
 import com.strikete.photon.Photon;
-import com.strikete.photon.PhotonDataUtilities;
 import com.strikete.photon.exceptions.ObjectNotFoundException;
 import com.strikete.photon.objects.BeamPalette;
 import com.strikete.photon.objects.Channel;
@@ -226,7 +224,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				channel = new Channel(channelNum,partNum,index,uid);
 				isNew = true;
-				photon.log.info("OBJ: New Channel Object created. CH "+ channelNum + " PT " + partNum);
+				Photon.log.info("OBJ: New Channel Object created. CH "+ channelNum + " PT " + partNum);
 			}
 			
 			try {
@@ -256,20 +254,6 @@ public class PhotonOscRoutines {
 				photon.channels.add(channel);
 			}
 		};
-		
-		Consumer<OSCMessage> oscTemp = message -> {
-			OSCMessageInfo msgInfo = message.getInfo();
-			System.out.println("BEGIN NEW MESSAGE");
-			System.out.println(message.getAddress());
-			System.out.println(msgInfo.getArgumentTypeTags());
-			
-			List<Object> argList = message.getArguments();
-			
-			for(int x = 0; x < argList.size(); x++) {
-				System.out.println(argList.get(x));
-			}
-			int index = (int) argList.get(0);
-		};
 		listeners.add(new OscListener(photon, OscIncoming.RETURN_PATCH, patchInfoConsumer, true));
 		
 		Consumer<OSCMessage> patchNoteConsumer = message -> {								//PATCH INFO CONSUMER (2/2) notes
@@ -291,7 +275,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				channel = new Channel(channelNum,partNum,index,uid);
 				isNew = true;
-				photon.log.info("OBJ: New Channel Object created. CH "+ channelNum + " PT " + partNum);
+				Photon.log.info("OBJ: New Channel Object created. CH "+ channelNum + " PT " + partNum);
 			}
 			
 			channel.setNotes(OscNumberInterpreter.oscToString(argList.get(2)));
@@ -319,7 +303,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				cuelist = new Cuelist(cuelistNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Cuelist Object created. Cuelist #" + cuelistNum);
+				Photon.log.info("OBJ: New Cuelist Object created. Cuelist #" + cuelistNum);
 			}
 			
 			cuelist.setLabel(OscNumberInterpreter.oscToString(argList.get(2)));
@@ -357,7 +341,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				cuelist = new Cuelist(cuelistNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Cuelist Object created. Cuelist #" + cuelistNum);
+				Photon.log.info("OBJ: New Cuelist Object created. Cuelist #" + cuelistNum);
 			}
 			
 			try {
@@ -392,7 +376,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				cue = new Cue(cueNum, index, uid, cuelistNum, partNum);
 				isNew = true;
-				photon.log.info("OBJ: New Cue Object created. Cue #" + cueNum);
+				Photon.log.info("OBJ: New Cue Object created. Cue #" + cueNum);
 			}
 			
 			cue.setLabel(OscNumberInterpreter.oscToString(argList.get(2)));
@@ -446,7 +430,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				cue = new Cue(cueNum, index, uid, cuelistNum, partNum);
 				isNew = true;
-				photon.log.info("OBJ: New Cue Object created. Cue #" + cueNum);
+				Photon.log.info("OBJ: New Cue Object created. Cue #" + cueNum);
 			}
 			
 			try {
@@ -480,7 +464,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				cue = new Cue(cueNum, index, uid, cuelistNum, partNum);
 				isNew = true;
-				photon.log.info("OBJ: New Cue Object created. Cue #" + cueNum);
+				Photon.log.info("OBJ: New Cue Object created. Cue #" + cueNum);
 			}
 			
 			try {
@@ -514,7 +498,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				cue = new Cue(cueNum, index, uid, cuelistNum, partNum);
 				isNew = true;
-				photon.log.info("OBJ: New Cue Object created. Cue #" + cueNum);
+				Photon.log.info("OBJ: New Cue Object created. Cue #" + cueNum);
 			}
 			
 			try {
@@ -546,7 +530,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				group = new Group(groupNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Group Object created. Group #" + groupNum);
+				Photon.log.info("OBJ: New Group Object created. Group #" + groupNum);
 			}
 			group.setLabel(OscNumberInterpreter.oscToString(argList.get(2)));
 			
@@ -573,7 +557,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				group = new Group(groupNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Group Object created. Group #" + groupNum);
+				Photon.log.info("OBJ: New Group Object created. Group #" + groupNum);
 			}
 			group.setLabel(OscNumberInterpreter.oscToString(argList.get(2)));
 			
@@ -610,7 +594,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				macro = new Macro(macroNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Macro Object created. Macro #" + macroNum);
+				Photon.log.info("OBJ: New Macro Object created. Macro #" + macroNum);
 			}
 			macro.setLabel(OscNumberInterpreter.oscToString(argList.get(2)));
 			macro.setMode(OscNumberInterpreter.oscToString(argList.get(3)));
@@ -638,7 +622,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				macro = new Macro(macroNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Macro Object created. Macro #" + macroNum);
+				Photon.log.info("OBJ: New Macro Object created. Macro #" + macroNum);
 			}
 			
 			String macroCommand = ""; //Compiles multiple String messages (if necessary) and puts them together
@@ -670,7 +654,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				sub = new Sub(subNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Sub Object created. Sub #" + subNum);
+				Photon.log.info("OBJ: New Sub Object created. Sub #" + subNum);
 			}
 			
 			sub.setLabel(OscNumberInterpreter.oscToString(argList.get(2)));
@@ -708,7 +692,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				sub = new Sub(subNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Sub Object created. Sub #" + subNum);
+				Photon.log.info("OBJ: New Sub Object created. Sub #" + subNum);
 			}
 			
 			try {
@@ -740,7 +724,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				preset = new Preset(presetNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Preset Object created. Preset #" + presetNum);
+				Photon.log.info("OBJ: New Preset Object created. Preset #" + presetNum);
 			}
 			
 			preset.setLabel(OscNumberInterpreter.oscToString(argList.get(2)));
@@ -770,7 +754,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				preset = new Preset(presetNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Preset Object created. Preset #" + presetNum);
+				Photon.log.info("OBJ: New Preset Object created. Preset #" + presetNum);
 			}
 			
 			try {
@@ -802,7 +786,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				preset = new Preset(presetNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Preset Object created. Preset #" + presetNum);
+				Photon.log.info("OBJ: New Preset Object created. Preset #" + presetNum);
 			}
 			
 			try {
@@ -834,7 +818,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				preset = new Preset(presetNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Preset Object created. Preset #" + presetNum);
+				Photon.log.info("OBJ: New Preset Object created. Preset #" + presetNum);
 			}
 			
 			try {
@@ -866,7 +850,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				palette = new IntensityPalette(paletteNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Intensity Palette Object created. IP #" + paletteNum);
+				Photon.log.info("OBJ: New Intensity Palette Object created. IP #" + paletteNum);
 			}
 			
 			palette.setLabel(OscNumberInterpreter.oscToString(argList.get(2)));
@@ -896,7 +880,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				palette = new IntensityPalette(paletteNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Intensity Palette Object created. IP #" + paletteNum);
+				Photon.log.info("OBJ: New Intensity Palette Object created. IP #" + paletteNum);
 			}
 			
 			palette.setChannelList(OscNumberInterpreter.oscNumberToArray(argList.get(2)));
@@ -924,7 +908,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				palette = new IntensityPalette(paletteNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Intensity Palette Object created. IP #" + paletteNum);
+				Photon.log.info("OBJ: New Intensity Palette Object created. IP #" + paletteNum);
 			}
 			
 			try {
@@ -956,7 +940,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				palette = new FocusPalette(paletteNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Focus Palette Object created. FP #" + paletteNum);
+				Photon.log.info("OBJ: New Focus Palette Object created. FP #" + paletteNum);
 			}
 			
 			palette.setLabel(OscNumberInterpreter.oscToString(argList.get(2)));
@@ -986,7 +970,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				palette = new FocusPalette(paletteNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Focus Palette Object created. FP #" + paletteNum);
+				Photon.log.info("OBJ: New Focus Palette Object created. FP #" + paletteNum);
 			}
 			
 			try {
@@ -1018,7 +1002,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				palette = new FocusPalette(paletteNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Focus Palette Object created. FP #" + paletteNum);
+				Photon.log.info("OBJ: New Focus Palette Object created. FP #" + paletteNum);
 			}
 			
 			try {
@@ -1050,7 +1034,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				palette = new ColorPalette(paletteNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Color Palette Object created. CP #" + paletteNum);
+				Photon.log.info("OBJ: New Color Palette Object created. CP #" + paletteNum);
 			}
 			
 			palette.setLabel(OscNumberInterpreter.oscToString(argList.get(2)));
@@ -1080,7 +1064,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				palette = new ColorPalette(paletteNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Color Palette Object created. CP #" + paletteNum);
+				Photon.log.info("OBJ: New Color Palette Object created. CP #" + paletteNum);
 			}
 			
 			try {
@@ -1112,7 +1096,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				palette = new ColorPalette(paletteNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Color Palette Object created. CP #" + paletteNum);
+				Photon.log.info("OBJ: New Color Palette Object created. CP #" + paletteNum);
 			}
 			
 			try {
@@ -1144,7 +1128,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				palette = new BeamPalette(paletteNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Beam Palette Object created. BP #" + paletteNum);
+				Photon.log.info("OBJ: New Beam Palette Object created. BP #" + paletteNum);
 			}
 			
 			palette.setLabel(OscNumberInterpreter.oscToString(argList.get(2)));
@@ -1174,7 +1158,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				palette = new BeamPalette(paletteNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Beam Palette Object created. BP #" + paletteNum);
+				Photon.log.info("OBJ: New Beam Palette Object created. BP #" + paletteNum);
 			}
 			
 			try {
@@ -1206,7 +1190,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				palette = new BeamPalette(paletteNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Beam Palette Object created. BP #" + paletteNum);
+				Photon.log.info("OBJ: New Beam Palette Object created. BP #" + paletteNum);
 			}
 			
 			try {
@@ -1238,7 +1222,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				curve = new Curve(curveNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Curve Object created. Curve #" + curveNum);
+				Photon.log.info("OBJ: New Curve Object created. Curve #" + curveNum);
 			}
 			
 			curve.setLabel(OscNumberInterpreter.oscToString(argList.get(2)));
@@ -1266,7 +1250,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				effect = new Effect(effectNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Effect Object created. Effect #" + effectNum);
+				Photon.log.info("OBJ: New Effect Object created. Effect #" + effectNum);
 			}
 			
 			effect.setLabel(OscNumberInterpreter.oscToString(argList.get(2)));
@@ -1299,7 +1283,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				snapshot = new Snapshot(snapshotNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Snapshot Object created. Snapshot #" + snapshotNum);
+				Photon.log.info("OBJ: New Snapshot Object created. Snapshot #" + snapshotNum);
 			}
 			
 			snapshot.setLabel(OscNumberInterpreter.oscToString(argList.get(2)));
@@ -1327,7 +1311,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				pixelmap = new Pixelmap(pixelmapNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Pixelmap Object created. Pixelmap #" + pixelmapNum);
+				Photon.log.info("OBJ: New Pixelmap Object created. Pixelmap #" + pixelmapNum);
 			}
 			
 			pixelmap.setLabel(OscNumberInterpreter.oscToString(argList.get(2)));
@@ -1361,7 +1345,7 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				pixelmap = new Pixelmap(pixelmapNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Pixelmap Object created. Pixelmap #" + pixelmapNum);
+				Photon.log.info("OBJ: New Pixelmap Object created. Pixelmap #" + pixelmapNum);
 			}
 			
 			pixelmap.setLayerChannelList(OscNumberInterpreter.oscNumberToArray(argList.get(2)));
@@ -1389,10 +1373,14 @@ public class PhotonOscRoutines {
 			}catch(ObjectNotFoundException e) {
 				magicSheet = new MagicSheet(magicSheetNum, index, uid);
 				isNew = true;
-				photon.log.info("OBJ: New Magic Sheet Object created. Magic Sheet #" + magicSheetNum);
+				Photon.log.info("OBJ: New Magic Sheet Object created. Magic Sheet #" + magicSheetNum);
 			}
 			
 			magicSheet.setLabel(OscNumberInterpreter.oscToString(argList.get(2)));
+			
+			if(isNew) {
+				photon.magicSheets.add(magicSheet);
+			}
 		};
 		listeners.add(new OscListener(photon, OscIncoming.RETURN_MAGIC_SHEET, magicSheetInfoConsumer, true));
 		
