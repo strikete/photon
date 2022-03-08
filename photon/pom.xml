@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.strikete</groupId>
   <artifactId>photon</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.17</version>
   <name>Photon LX Console Plugin Manager</name>
   <description>A plugin interface for Light Boards</description>
   <dependencies>
@@ -24,7 +24,7 @@
 	<dependency>
 		<groupId>com.google.guava</groupId>
 		<artifactId>guava</artifactId>
-		<version>30.0-jre</version>
+		<version>31.0.1-jre</version>
 	</dependency>
 	<dependency>
     	<groupId>org.apache.commons</groupId>
@@ -32,6 +32,11 @@
     	<version>1.9.0</version>
 	</dependency>
 </dependencies>
+<properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+</properties>
 <build>
 	<plugins>
 		<plugin>

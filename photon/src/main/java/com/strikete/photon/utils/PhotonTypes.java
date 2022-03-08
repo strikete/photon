@@ -1,0 +1,22 @@
+package com.strikete.photon.utils;
+
+public enum PhotonTypes {
+
+	BEAM_PALETTE,
+	CHANNEL,
+	COLOR_PALETTE,
+	CUE,
+	CUELIST,
+	CURVE,
+	EFFECT,
+	FIXTURE,
+	FOCUS_PALETTE,
+	GROUP,
+	INTENSITY_PALETTE,
+	MACRO,
+	MAGIC_SHEET,
+	PIXELMAP,
+	PRESET,
+	SNAPSHOT,
+	SUB;
+}

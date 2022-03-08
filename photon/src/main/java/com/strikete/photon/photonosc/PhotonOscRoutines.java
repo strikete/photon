@@ -6,6 +6,8 @@ import java.util.function.Consumer;
 
 import com.illposed.osc.OSCMessage;
 import com.strikete.photon.Photon;
+import com.strikete.photon.events.CountResponseEvent;
+import com.strikete.photon.events.VersionResponseEvent;
 import com.strikete.photon.exceptions.ObjectNotFoundException;
 import com.strikete.photon.objects.BeamPalette;
 import com.strikete.photon.objects.Channel;
@@ -43,7 +45,9 @@ public class PhotonOscRoutines {
 	private void createVersionListener() {
 		Consumer<OSCMessage> versionConsumer = message -> {
 			List<Object> argList = message.getArguments();
-			photon.setEosVersion(OscNumberInterpreter.oscToString(argList.get(0)));
+			String version = OscNumberInterpreter.oscToString(argList.get(0));
+			photon.setEosVersion(version);
+			photon.photonEventBus.post(new VersionResponseEvent(version));
 		};
 		OscListener versionListener = new OscListener(photon, OscIncoming.RETURN_VERSION, versionConsumer, true);
 		listeners.add(versionListener);
@@ -54,40 +58,7 @@ public class PhotonOscRoutines {
 	 */
 	
 	private void performResponse(int count, String message) {
-		for(int b = 0; b < count; b++) {
-			try {
-				Thread.sleep(delay);
-			} catch (InterruptedException e) {
-				// TODO Add generic Thread sleep error
-				e.printStackTrace();
-			}
-			ArrayList<String> indexParameter = new ArrayList<String>();
-			indexParameter.add(Integer.toString(b));
-			photon.sender.sendOscMessage(photon.sender.parameterizeString(message, indexParameter));
-		}
-	}
-	
-	private void createCountListeners() {
-		
-		Consumer<OSCMessage> patchCountConsumer = message -> {							//PATCH COUNT CONSUMER
-			List<Object> argList = message.getArguments();
-			int count = (Integer) argList.get(0);
-			performResponse(count,OscOutgoing.GET_PATCH_INFO);
-		};
-		listeners.add(new OscListener(photon,OscIncoming.RETURN_PATCH_COUNT,patchCountConsumer,true));
-		
-		Consumer<OSCMessage> cuelistCountConsumer = message -> {						//CUELIST COUNT CONSUMER
-			List<Object> argList = message.getArguments();
-			int count = (Integer) argList.get(0);
-			photon.cuelistCount = count;
-			performResponse(count,OscOutgoing.GET_CUELIST_INFO);
-			
-		};
-		listeners.add(new OscListener(photon,OscIncoming.RETURN_CUELIST_COUNT,cuelistCountConsumer,true));
-		
-		Consumer<OSCMessage> cueCountConsumer = message -> {							//CUE COUNT CONSUMER
-			List<Object> argList = message.getArguments();
-			int count = (Integer) argList.get(0);
+		while(photon.workingBool) {
 			for(int b = 0; b < count; b++) {
 				try {
 					Thread.sleep(delay);
@@ -96,11 +67,53 @@ public class PhotonOscRoutines {
 					e.printStackTrace();
 				}
 				ArrayList<String> indexParameter = new ArrayList<String>();
-				String messageAddress = message.getAddress();
-				String[] messageAddressArray = messageAddress.split("/");
-				indexParameter.add(messageAddressArray[5]);
 				indexParameter.add(Integer.toString(b));
-				photon.sender.sendOscMessage(photon.sender.parameterizeString(OscOutgoing.GET_CUE_INFO, indexParameter));
+				photon.sender.sendOscMessage(photon.sender.parameterizeString(message, indexParameter));
+			}
+			break;
+		}
+	}
+	
+	private void createCountListeners() {
+		
+		Consumer<OSCMessage> patchCountConsumer = message -> {							//PATCH COUNT CONSUMER
+			List<Object> argList = message.getArguments();
+			int count = (Integer) argList.get(0);
+			photon.photonEventBus.post(new CountResponseEvent("Channels",count));
+			performResponse(count,OscOutgoing.GET_PATCH_INFO);
+		};
+		listeners.add(new OscListener(photon,OscIncoming.RETURN_PATCH_COUNT,patchCountConsumer,true));
+		
+		Consumer<OSCMessage> cuelistCountConsumer = message -> {						//CUELIST COUNT CONSUMER
+			List<Object> argList = message.getArguments();
+			int count = (Integer) argList.get(0);
+			photon.cuelistCount = count;
+			photon.photonEventBus.post(new CountResponseEvent("Cuelists",count));
+			performResponse(count,OscOutgoing.GET_CUELIST_INFO);
+			
+		};
+		listeners.add(new OscListener(photon,OscIncoming.RETURN_CUELIST_COUNT,cuelistCountConsumer,true));
+		
+		Consumer<OSCMessage> cueCountConsumer = message -> {							//CUE COUNT CONSUMER
+			List<Object> argList = message.getArguments();
+			int count = (Integer) argList.get(0);
+			photon.photonEventBus.post(new CountResponseEvent("Cues",count));
+			while(photon.workingBool) {
+				for(int b = 0; b < count; b++) {
+					try {
+						Thread.sleep(delay);
+					} catch (InterruptedException e) {
+						// TODO Add generic Thread sleep error
+						e.printStackTrace();
+					}
+					ArrayList<String> indexParameter = new ArrayList<String>();
+					String messageAddress = message.getAddress();
+					String[] messageAddressArray = messageAddress.split("/");
+					indexParameter.add(messageAddressArray[5]);
+					indexParameter.add(Integer.toString(b));
+					photon.sender.sendOscMessage(photon.sender.parameterizeString(OscOutgoing.GET_CUE_INFO, indexParameter));
+				}
+				break;
 			}
 		};
 		listeners.add(new OscListener(photon,OscIncoming.RETURN_CUE_COUNT,cueCountConsumer,true));
@@ -108,6 +121,7 @@ public class PhotonOscRoutines {
 		Consumer<OSCMessage> groupCountConsumer = message -> {							//GROUP COUNT CONSUMER
 			List<Object> argList = message.getArguments();
 			int count = (Integer) argList.get(0);
+			photon.photonEventBus.post(new CountResponseEvent("Groups",count));
 			performResponse(count,OscOutgoing.GET_GROUP_INFO);
 		};
 		listeners.add(new OscListener(photon,OscIncoming.RETURN_GROUP_COUNT,groupCountConsumer,true));
@@ -115,6 +129,7 @@ public class PhotonOscRoutines {
 		Consumer<OSCMessage> macroCountConsumer = message -> {							//MACRO COUNT CONSUMER
 			List<Object> argList = message.getArguments();
 			int count = (Integer) argList.get(0);
+			photon.photonEventBus.post(new CountResponseEvent("Macros",count));
 			performResponse(count,OscOutgoing.GET_MACRO_INFO);
 		};
 		listeners.add(new OscListener(photon,OscIncoming.RETURN_MACRO_COUNT,macroCountConsumer,true));
@@ -122,6 +137,7 @@ public class PhotonOscRoutines {
 		Consumer<OSCMessage> subCountConsumer = message -> {							//SUB COUNT CONSUMER
 			List<Object> argList = message.getArguments();
 			int count = (Integer) argList.get(0);
+			photon.photonEventBus.post(new CountResponseEvent("Subs",count));
 			performResponse(count,OscOutgoing.GET_SUB_INFO);
 		};
 		listeners.add(new OscListener(photon,OscIncoming.RETURN_SUB_COUNT,subCountConsumer,true));
@@ -129,6 +145,7 @@ public class PhotonOscRoutines {
 		Consumer<OSCMessage> presetCountConsumer = message -> {							//PRESET COUNT CONSUMER
 			List<Object> argList = message.getArguments();
 			int count = (Integer) argList.get(0);
+			photon.photonEventBus.post(new CountResponseEvent("Presets",count));
 			performResponse(count,OscOutgoing.GET_PRESET_INFO);
 		};
 		listeners.add(new OscListener(photon,OscIncoming.RETURN_PRESET_COUNT,presetCountConsumer,true));
@@ -136,6 +153,7 @@ public class PhotonOscRoutines {
 		Consumer<OSCMessage> intensityPaletteCountConsumer = message -> {				//INTENSITY PALETTE COUNT CONSUMER
 			List<Object> argList = message.getArguments();
 			int count = (Integer) argList.get(0);
+			photon.photonEventBus.post(new CountResponseEvent("Intensity Palettes",count));
 			performResponse(count,OscOutgoing.GET_INTENSITY_PALETTE_INFO);
 		};
 		listeners.add(new OscListener(photon,OscIncoming.RETURN_INTENSITY_PALETTE_COUNT,intensityPaletteCountConsumer,true));
@@ -143,6 +161,7 @@ public class PhotonOscRoutines {
 		Consumer<OSCMessage> focusPaletteCountConsumer = message -> {					//FOCUS PALETTE COUNT CONSUMER
 			List<Object> argList = message.getArguments();
 			int count = (Integer) argList.get(0);
+			photon.photonEventBus.post(new CountResponseEvent("Focus Palettes",count));
 			performResponse(count,OscOutgoing.GET_FOCUS_PALETTE_INFO);
 		};
 		listeners.add(new OscListener(photon,OscIncoming.RETURN_FOCUS_PALETTE_COUNT,focusPaletteCountConsumer,true));
@@ -150,6 +169,7 @@ public class PhotonOscRoutines {
 		Consumer<OSCMessage> colorPaletteCountConsumer = message -> {					//COLOR PALETTE COUNT CONSUMER
 			List<Object> argList = message.getArguments();
 			int count = (Integer) argList.get(0);
+			photon.photonEventBus.post(new CountResponseEvent("Color Palettes",count));
 			performResponse(count,OscOutgoing.GET_COLOR_PALETTE_INFO);
 		};
 		listeners.add(new OscListener(photon,OscIncoming.RETURN_COLOR_PALETTE_COUNT,colorPaletteCountConsumer,true));
@@ -157,6 +177,7 @@ public class PhotonOscRoutines {
 		Consumer<OSCMessage> beamPaletteCountConsumer = message -> {					//BEAM PALETTE COUNT CONSUMER
 			List<Object> argList = message.getArguments();
 			int count = (Integer) argList.get(0);
+			photon.photonEventBus.post(new CountResponseEvent("Beam Palettes",count));
 			performResponse(count,OscOutgoing.GET_BEAM_PALETTE_INFO);
 		};
 		listeners.add(new OscListener(photon,OscIncoming.RETURN_BEAM_PALETTE_COUNT,beamPaletteCountConsumer,true));
@@ -164,6 +185,7 @@ public class PhotonOscRoutines {
 		Consumer<OSCMessage> curveCountConsumer = message -> {							//CURVE COUNT CONSUMER
 			List<Object> argList = message.getArguments();
 			int count = (Integer) argList.get(0);
+			photon.photonEventBus.post(new CountResponseEvent("Curves",count));
 			performResponse(count,OscOutgoing.GET_CURVE_INFO);
 		};
 		listeners.add(new OscListener(photon,OscIncoming.RETURN_CURVE_COUNT,curveCountConsumer,true));
@@ -171,6 +193,7 @@ public class PhotonOscRoutines {
 		Consumer<OSCMessage> effectCountConsumer = message -> {							//EFFECT COUNT CONSUMER
 			List<Object> argList = message.getArguments();
 			int count = (Integer) argList.get(0);
+			photon.photonEventBus.post(new CountResponseEvent("Effects",count));
 			performResponse(count,OscOutgoing.GET_EFFECT_INFO);
 		};
 		listeners.add(new OscListener(photon,OscIncoming.RETURN_EFFECT_COUNT,effectCountConsumer,true));
@@ -178,6 +201,7 @@ public class PhotonOscRoutines {
 		Consumer<OSCMessage> snapshotCountConsumer = message -> {						//SNAPSHOT COUNT CONSUMER
 			List<Object> argList = message.getArguments();
 			int count = (Integer) argList.get(0);
+			photon.photonEventBus.post(new CountResponseEvent("Snapshots",count));
 			performResponse(count,OscOutgoing.GET_SNAPSHOT_INFO);
 		};
 		listeners.add(new OscListener(photon,OscIncoming.RETURN_SNAPSHOT_COUNT,snapshotCountConsumer,true));
@@ -185,6 +209,7 @@ public class PhotonOscRoutines {
 		Consumer<OSCMessage> pixelmapCountConsumer = message -> {						//PIXELMAP COUNT CONSUMER
 			List<Object> argList = message.getArguments();
 			int count = (Integer) argList.get(0);
+			photon.photonEventBus.post(new CountResponseEvent("Pixelmaps",count));
 			performResponse(count,OscOutgoing.GET_PIXELMAP_INFO);
 		};
 		listeners.add(new OscListener(photon,OscIncoming.RETURN_PIXELMAP_COUNT,pixelmapCountConsumer,true));
@@ -192,6 +217,7 @@ public class PhotonOscRoutines {
 		Consumer<OSCMessage> magicSheetCountConsumer = message -> {						//MAGIC SHEET COUNT CONSUMER
 			List<Object> argList = message.getArguments();
 			int count = (Integer) argList.get(0);
+			photon.photonEventBus.post(new CountResponseEvent("Magic Sheets",count));
 			performResponse(count,OscOutgoing.GET_MAGIC_SHEET_INFO);
 		};
 		listeners.add(new OscListener(photon,OscIncoming.RETURN_MAGIC_SHEET_COUNT,magicSheetCountConsumer,true));

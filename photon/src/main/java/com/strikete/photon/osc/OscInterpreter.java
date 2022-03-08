@@ -111,7 +111,7 @@ public class OscInterpreter implements OSCMessageListener{
 					if(doArraysMatch(messageAddressArray, listenerAddressArray)) { //Compare the two arrays
 						oscListeners.get(a).prepareConsumer(event.getMessage());
 						Thread thread = new Thread(oscListeners.get(a));
-						thread.start();
+						photon.executor.submit(thread);
 						
 						try {
 							Thread.sleep(25); //Stabilizing sleep to help avoid data duplicates.
